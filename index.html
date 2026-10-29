@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+<title>雷雨危険度チェッカー</title>
+ 
+<style>
+body{
+font-family: sans-serif;
+max-width: 600px;
+margin: 30px auto;
+padding: 20px;
+}
+ 
+button{
+padding: 12px 20px;
+font-size: 16px;
+cursor: pointer;
+}
+ 
+.card{
+margin-top:20px;
+border:1px solid #ccc;
+border-radius:8px;
+padding:15px;
+}
+ 
+.safe{
+background:#dff0d8;
+}
+ 
+.caution{
+background:#fcf8e3;
+}
+ 
+.danger{
+background:#f2dede;
+}
+ 
+.loading{
+color:#666;
+}
+</style>
+</head>
+ 
+<body>
+ 
+<h1>雷雨危険度チェッカー</h1>
+ 
+<button id="checkBtn">
+現在地の天気を確認
+</button>
+ 
+<div id="result" class="card">
+ボタンを押してください
+</div>
+ 
+<script>
+ 
+const button = document.getElementById("checkBtn");
+const result = document.getElementById("result");
+ 
+button.addEventListener("click", () => {
+ 
+result.className = "card loading";
+result.innerHTML = "位置情報取得中...";
+ 
+navigator.geolocation.getCurrentPosition(
+getWeather,
+geoError,
+{
+enableHighAccuracy: true,
+timeout: 10000
+}
+);
+ 
+});
+ 
+async function getWeather(position){
+ 
+const lat = position.coords.latitude;
+const lon = position.coords.longitude;
+ 
+result.innerHTML = "気象データ取得中...";
+ 
+try{
+ 
+const url =
+`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=rain`;
+ 
+const response = await fetch(url);
+ 
+const data = await response.json();
+ 
+const rain = data.current.rain ?? 0;
+ 
+let level = "安全";
+let css = "safe";
+ 
+if(rain >= 10){
+level = "注意";
+css = "caution";
+}
+ 
+if(rain >= 30){
+level = "警戒";
+css = "danger";
+}
+ 
+result.className = `card ${css}`;
+ 
+result.innerHTML = `
+<h2>現在地</h2>
+ 
+緯度: ${lat.toFixed(5)}<br>
+経度: ${lon.toFixed(5)}<br><br>
+ 
+<b>現在降水量</b><br>
+${rain} mm/h<br><br>
+ 
+<b>危険度</b><br>
+${level}
+`;
+ 
+}
+catch(error){
+ 
+result.className = "card";
+ 
+result.innerHTML =
+"気象情報の取得に失敗しました。";
+}
+}
+ 
+function geoError(error){
+ 
+result.className = "card";
+ 
+switch(error.code){
+ 
+case 1:
+result.innerHTML =
+"位置情報の利用が許可されていません。";
+break;
+ 
+case 2:
+result.innerHTML =
+"位置情報を取得できません。";
+break;
+ 
+case 3:
+result.innerHTML =
+"タイムアウトしました。";
+break;
+ 
+default:
+result.innerHTML =
+"不明なエラーです。";
+}
+}
+ 
+</script>
+ 
+</body>
+</html>
+``
