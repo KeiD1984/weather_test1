@@ -12,69 +12,104 @@ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
 
 body{
-    margin:0;
-    font-family:sans-serif;
-    background:#f5f5f5;
+  margin:0;
+  font-family:sans-serif;
+  background:#f3f3f3;
 }
 
 header{
-    background:#1565c0;
-    color:white;
-    padding:12px;
-    text-align:center;
+  background:#1565c0;
+  color:white;
+  text-align:center;
+  padding:12px;
 }
 
 .container{
-    padding:10px;
+  padding:10px;
 }
 
 .card{
-    background:white;
-    border-radius:8px;
-    padding:12px;
-    margin-bottom:10px;
-    box-shadow:0 1px 4px rgba(0,0,0,.2);
+  background:white;
+  border-radius:8px;
+  padding:12px;
+  margin-bottom:10px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.2);
 }
 
-.safe{
-    background:#d4edda;
-}
-
-.warning{
-    background:#fff3cd;
-}
-
-.danger{
-    background:#f8d7da;
-}
-
-button{
-    padding:10px;
-    margin:3px;
-    border:none;
-    border-radius:5px;
-    background:#1565c0;
-    color:white;
-    cursor:pointer;
-}
-
-button:hover{
-    background:#0d47a1;
-}
-
-#map{
-    height:50vh;
-    border-radius:8px;
+.statusBox{
+  border-radius:8px;
 }
 
 .value{
-    font-size:24px;
-    font-weight:bold;
+  font-size:24px;
+  font-weight:bold;
 }
 
 .small{
-    color:#666;
-    font-size:12px;
+  font-size:12px;
+  color:#666;
+}
+
+button{
+  padding:10px;
+  margin:3px;
+  border:none;
+  border-radius:5px;
+  background:#1565c0;
+  color:white;
+}
+
+button:active{
+  opacity:.8;
+}
+
+#map{
+  height:50vh;
+  border-radius:8px;
+}
+
+.rain-none{
+  background:#eeeeee;
+}
+
+.rain-light{
+  background:#b3e5fc;
+}
+
+.rain-normal{
+  background:#4fc3f7;
+  color:white;
+}
+
+.rain-warning{
+  background:#ffe082;
+}
+
+.rain-heavy{
+  background:#ffb74d;
+}
+
+.rain-danger{
+  background:#ef5350;
+  color:white;
+}
+
+.rain-extreme{
+  background:#b71c1c;
+  color:white;
+}
+
+.rain-max{
+  background:#7b1fa2;
+  color:white;
+}
+
+.thunder-none{
+  background:#eeeeee;
+}
+
+.tornado-none{
+  background:#eeeeee;
 }
 
 </style>
@@ -91,14 +126,11 @@ button:hover{
 <div class="card">
 
 <label>
-
 <input
 type="checkbox"
 id="autoUpdate"
 checked>
-
 5分ごと自動更新
-
 </label>
 
 <br><br>
@@ -115,9 +147,7 @@ checked>
 雷・竜巻
 </button>
 
-<div
-id="lastUpdate"
-class="small">
+<div id="lastUpdate" class="small">
 -
 </div>
 
@@ -125,7 +155,7 @@ class="small">
 
 <div class="card">
 
-<h3>現在地</h3>
+<h3>📍現在地</h3>
 
 <div id="place">
 取得中...
@@ -133,17 +163,48 @@ class="small">
 
 </div>
 
-<div
-id="rainCard"
-class="card">
+<div id="rainStatus"
+class="card statusBox">
 
-<h3>降水量</h3>
+<h3>☔ 降水量</h3>
 
-<div
-id="rain"
+<div id="rainValue"
 class="value">
 
---
+取得中...
+
+</div>
+
+<div id="rainComment">
+-
+</div>
+
+</div>
+
+<div id="thunderStatus"
+class="card statusBox thunder-none">
+
+<h3>⚡ 雷活動度</h3>
+
+<div id="thunderValue"
+class="value">
+
+発生なし
+
+</div>
+
+</div>
+
+<div id="tornadoStatus"
+class="card statusBox tornado-none">
+
+<h3>🌪 竜巻発生確度</h3>
+
+<div id="tornadoValue"
+class="value">
+
+発生なし
+
 </div>
 
 </div>
@@ -159,15 +220,6 @@ class="value">
 let map;
 let marker;
 let timer;
-
-function updateTime(){
-
- document.getElementById("lastUpdate")
- .innerText =
- "最終更新: " +
- new Date().toLocaleString();
-
-}
 
 function openNowcast(){
 
@@ -187,11 +239,95 @@ function openThunder(){
 
 }
 
+function updateTime(){
+
+ document.getElementById(
+ "lastUpdate"
+ ).innerText =
+ "最終更新: " +
+ new Date().toLocaleString();
+
+}
+
+function rainInfo(rain){
+
+ if(rain === 0){
+
+  return {
+   cls:"rain-none",
+   text:"降雨なし"
+  };
+
+ }
+
+ if(rain <= 5){
+
+  return {
+   cls:"rain-light",
+   text:"弱い雨"
+  };
+
+ }
+
+ if(rain <= 10){
+
+  return {
+   cls:"rain-normal",
+   text:"雨"
+  };
+
+ }
+
+ if(rain <= 20){
+
+  return {
+   cls:"rain-warning",
+   text:"やや強い雨"
+  };
+
+ }
+
+ if(rain <= 30){
+
+  return {
+   cls:"rain-heavy",
+   text:"強い雨"
+  };
+
+ }
+
+ if(rain <= 50){
+
+  return {
+   cls:"rain-danger",
+   text:"激しい雨"
+  };
+
+ }
+
+ if(rain <= 80){
+
+  return {
+   cls:"rain-extreme",
+   text:"非常に激しい雨"
+  };
+
+ }
+
+ return {
+
+  cls:"rain-max",
+  text:"猛烈な雨"
+
+ };
+
+}
+
 async function update(){
 
  navigator.geolocation.getCurrentPosition(
   success,
-  error,
+  geoError,
   {
    enableHighAccuracy:true,
    timeout:10000
@@ -212,16 +348,12 @@ async function success(position){
 
   map =
   L.map("map")
-  .setView(
-   [lat,lon],
-   11
-  );
+  .setView([lat,lon],11);
 
   L.tileLayer(
    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
    {
-    attribution:
-    "© OpenStreetMap"
+    attribution:"© OpenStreetMap"
    }
   ).addTo(map);
 
@@ -237,30 +369,29 @@ async function success(position){
  L.marker([lat,lon])
  .addTo(map);
 
- map.setView(
-  [lat,lon],
-  11
- );
+ map.setView([lat,lon],11);
 
  try{
 
   const geoUrl =
-   `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+  `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
 
   const geoRes =
-   await fetch(geoUrl);
+  await fetch(geoUrl);
 
-  const geoData =
-   await geoRes.json();
+  const geo =
+  await geoRes.json();
 
-  document.getElementById("place")
-  .innerHTML =
-  geoData.display_name;
+  document.getElementById(
+  "place"
+  ).innerHTML =
+  geo.display_name;
 
  }catch{
 
-  document.getElementById("place")
-  .innerHTML =
+  document.getElementById(
+  "place"
+  ).innerHTML =
   `${lat}, ${lon}`;
 
  }
@@ -271,51 +402,42 @@ async function success(position){
   `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=rain`;
 
   const weatherRes =
-   await fetch(weatherUrl);
+  await fetch(weatherUrl);
 
-  const weatherData =
-   await weatherRes.json();
+  const weather =
+  await weatherRes.json();
 
   const rain =
-   weatherData.current.rain || 0;
+  weather.current.rain || 0;
 
-  document.getElementById("rain")
-   .innerHTML =
-   rain + " mm/h";
+  const info =
+  rainInfo(rain);
 
-  const card =
-   document.getElementById(
-   "rainCard"
-   );
+  const rainBox =
+  document.getElementById(
+  "rainStatus"
+  );
 
-  card.className =
-  "card";
+  rainBox.className =
+  "card statusBox " +
+  info.cls;
 
-  if(rain >= 10){
+  document.getElementById(
+  "rainValue"
+  ).innerHTML =
+  rain + " mm/h";
 
-   card.classList.add(
-    "warning"
-   );
-
-  }
-
-  if(rain >= 20){
-
-   card.classList.remove(
-    "warning"
-   );
-
-   card.classList.add(
-    "danger"
-   );
-
-  }
+  document.getElementById(
+  "rainComment"
+  ).innerHTML =
+  info.text;
 
  }catch{
 
-  document.getElementById("rain")
-   .innerHTML =
-   "取得失敗";
+  document.getElementById(
+  "rainValue"
+  ).innerHTML =
+  "取得失敗";
 
  }
 
@@ -323,48 +445,48 @@ async function success(position){
 
 }
 
-function error(){
+function geoError(){
 
  alert(
-  "位置情報を取得できません"
+ "位置情報を取得できません"
  );
 
 }
 
 document
 .getElementById(
- "refreshBtn"
+"refreshBtn"
 )
 .addEventListener(
- "click",
- update
+"click",
+update
 );
 
 document
 .getElementById(
- "autoUpdate"
+"autoUpdate"
 )
 .addEventListener(
- "change",
- function(){
+"change",
+function(){
 
-  if(this.checked){
+ if(this.checked){
 
-   timer =
-   setInterval(
-    update,
-    300000
-   );
+  timer =
+  setInterval(
+   update,
+   300000
+  );
 
-  }else{
+ }else{
 
-   clearInterval(
-    timer
-   );
-
-  }
+  clearInterval(
+   timer
+  );
 
  }
+
+}
 );
 
 timer =
