@@ -218,14 +218,20 @@ async function loadNowcastLayer(){
    "https://www.jma.go.jp/bosai/jmatile/data/nowc/targetTimes_N1.json"
   );
 
-  const times =
-  await res.json();
+const times =
+await res.json();
 
-  const latest =
-  times[times.length - 1];
+console.log(times);
 
-  const validTime =
-  latest.valid;
+const latest =
+times[times.length - 1];
+
+console.log(latest);
+
+const validTime =
+latest.valid;
+
+console.log(validTime);
 
   if(nowcastLayer){
 
