@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
 
 <meta charset="UTF-8">
@@ -34,7 +33,7 @@ header{
 }
 
 #map{
- height:75vh;
+ height:70vh;
  width:100%;
 }
 
@@ -45,6 +44,26 @@ header{
  border-radius:8px;
  box-shadow:
  0 2px 4px rgba(0,0,0,.2);
+}
+
+button{
+
+ background:#1565c0;
+ color:white;
+
+ border:none;
+
+ padding:10px;
+
+ margin:4px;
+
+ border-radius:5px;
+
+ cursor:pointer;
+}
+
+button:hover{
+ background:#1976d2;
 }
 
 table{
@@ -67,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔降雨監視モニター
+☔ 降雨監視モニター
 </h2>
 
 </header>
@@ -77,66 +96,59 @@ th,td{
 <div class="card">
 
 <h3>
+気象庁ナウキャスト
+</h3>
+
+<button
+ onclick="window.open(
+  'https://www.jma.go.jp/bosai/nowc/',
+  '_blank'
+ )">
+
+☔ 雨雲の動き
+
+</button>
+
+<button
+ onclick="window.open(
+  'https://www.jma.go.jp/bosai/thunder/',
+  '_blank'
+ )">
+
+⚡ 雷ナウキャスト
+
+</button>
+
+<button
+ onclick="window.open(
+  'https://www.jma.go.jp/bosai/tornado/',
+  '_blank'
+ )">
+
+🌪 竜巻発生確度
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>
 監視地点
 </h3>
 
-<table id="pointTable">
+<table>
 
 <tr>
 <th>地点</th>
 <th>降雨状況</th>
 <th>雷</th>
 <th>竜巻</th>
+<th>地図</th>
 </tr>
 
-<tr>
-<td>広島駅</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-</tr>
-
-<tr>
-<td>平和記念公園</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-</tr>
-
-<tr>
-<td>宮島</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-</tr>
-
-<tr>
-<td>広島空港</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-</tr>
-
-<tr>
-<td>大和ミュージアム(呉市)</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-</tr>
-
-<tr>
-<td>福山駅</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-</tr>
-
-<tr>
-<td>宮脇写真館(三次市)</td>
-<td>-</td>
-<td>-</td>
-<td>-</td>
-</tr>
+<tbody id="siteTable">
+</tbody>
 
 </table>
 
@@ -146,7 +158,7 @@ th,td{
 
 <script>
 
-const fixedPoints = [
+const points = [
 
 {
  name:"広島駅",
@@ -192,15 +204,12 @@ const fixedPoints = [
 
 ];
 
-let nowcastLayer = null;
-
 const map =
 L.map("map")
 .setView(
  [34.40,132.46],
  9
 );
-
 
 L.tileLayer(
  "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -209,162 +218,65 @@ L.tileLayer(
  }
 ).addTo(map);
 
+function moveToPoint(
+ lat,
+ lon
+){
 
-
-
-fixedPoints.forEach(p=>{
-
- L.circleMarker(
-  [p.lat,p.lon],
-  {
-   radius:8,
-   fillColor:"#000000",
-   color:"#ffffff",
-   weight:2,
-   fillOpacity:1
-  }
- )
- .addTo(map)
- .bindPopup(
-  p.name
+ map.setView(
+  [lat,lon],
+  12
  );
-
-});
-
-async function loadNowcastLayer(){
-
- try{
-
-  console.log(
-   "loadNowcastLayer start"
-  );
-
-  const res =
-  await fetch(
-   "https://www.jma.go.jp/bosai/jmatile/data/nowc/targetTimes_N1.json"
-  );
-
-  const times =
-  await res.json();
-
-  console.log(
-   "times =",
-   times
-  );
-
-  const latest =
-  times[times.length - 1];
-
-  console.log(
-   "latest =",
-   latest
-  );
-
-  console.log(
-   "latest(JSON) =",
-   JSON.stringify(
-    latest,
-    null,
-    2
-   )
-  );
-
-  Object.keys(latest).forEach(
-   key=>{
-
-    console.log(
-     key,
-     latest[key]
-    );
-
-   }
-  );
-
-const validTime =
-latest.validtime;
-
-console.log(
- "validTime =",
- validTime
-);
-
-console.log(
- `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/9/455/202.png`
-);
-
-const tileUrl =
-
-`https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns_nd/{z}/{x}/{y}.png`;
-
-  console.log(
- "zoom",
- map.getZoom()
- );
-
-  console.log(
-   "Tile URL =",
-   tileUrl
-  );
-
-  if(nowcastLayer){
-
-   map.removeLayer(
-    nowcastLayer
-   );
-
-  }
-
-  console.log(
-   "layer add start"
-  );
-
-  nowcastLayer =
-  L.tileLayer(
-
-   tileUrl,
-
-   {
-    opacity:1.0,
-    attribution:"© 気象庁"
-   }
-
-  );
-
-  nowcastLayer.on(
- "tileload",
- function(e){
-
-  console.log(
-   "Tile Loaded:",
-   e.tile.src
-  );
-
- }
-);
-
-  nowcastLayer.addTo(map);
-
-  console.log(
-   "layer add ok"
-  );
-
- }
- catch(e){
-
-  console.error(
-   "Nowcast Error",
-   e
-  );
-
- }
 
 }
 
-loadNowcastLayer();
+const tbody =
+document.getElementById(
+ "siteTable"
+);
 
-setInterval(
- loadNowcastLayer,
- 300000
+points.forEach(
+ p=>{
+
+  L.circleMarker(
+   [p.lat,p.lon],
+   {
+    radius:8,
+    fillColor:"#000000",
+    color:"#ffffff",
+    weight:2,
+    fillOpacity:1
+   }
+  )
+  .addTo(map)
+  .bindTooltip(
+   p.name,
+   {
+    permanent:true,
+    direction:"top"
+   }
+  );
+
+  tbody.innerHTML += `
+   <tr>
+    <td>${p.name}</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td>
+     <button
+      onclick="
+      moveToPoint(
+       ${p.lat},
+       ${p.lon}
+      )">
+      📍
+     </button>
+    </td>
+   </tr>
+  `;
+
+ }
 );
 
 </script>
