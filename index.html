@@ -10,7 +10,7 @@
  content="width=device-width,initial-scale=1">
 
 <title>
-降雨監視モニター Ver2
+降雨監視モニター
 </title>
 
 <link
@@ -276,17 +276,26 @@ async function loadNowcastLayer(){
    }
   );
 
-  const validTime =
-  latest.validtime;
+const validTime =
+latest.validtime;
+
+console.log(
+ "validTime =",
+ validTime
+);
+
+console.log(
+ `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/9/455/202.png`
+);
+
+const tileUrl =
+
+`https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/{z}/{x}/{y}.png`;
 
   console.log(
-   "validTime =",
-   validTime
-  );
-
-  const tileUrl =
-
-  `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/{z}/{x}/{y}.png`;
+ "zoom",
+ map.getZoom()
+ );
 
   console.log(
    "Tile URL =",
@@ -311,7 +320,7 @@ async function loadNowcastLayer(){
    tileUrl,
 
    {
-    opacity:0.7,
+    opacity:1.0,
     attribution:"© 気象庁"
    }
 
