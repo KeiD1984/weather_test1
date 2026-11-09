@@ -326,6 +326,18 @@ const tileUrl =
 
   );
 
+  nowcastLayer.on(
+ "tileload",
+ function(e){
+
+  console.log(
+   "Tile Loaded:",
+   e.tile.src
+  );
+
+ }
+);
+
   nowcastLayer.addTo(map);
 
   console.log(
