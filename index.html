@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターA
+☔ 降雨監視モニターB
 </h2>
 
 </header>
@@ -396,6 +396,46 @@ for(let y=0;y<256;y+=16){
 }
 
 if(!found){
+
+ console.log(
+  "NO RAIN IN TILE",
+  p.name
+ );
+
+}
+
+let rainFound = false;
+
+for(let y=0;y<256;y+=32){
+
+ for(let x=0;x<256;x+=32){
+
+  const test =
+  ctx.getImageData(
+   x,
+   y,
+   1,
+   1
+  ).data;
+
+  if(test[3] > 0){
+
+   console.log(
+    "RAIN IN TILE",
+    p.name,
+    x,
+    y,
+    test
+   );
+
+   rainFound = true;
+  }
+
+ }
+
+}
+
+if(!rainFound){
 
  console.log(
   "NO RAIN IN TILE",
