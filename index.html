@@ -9,7 +9,7 @@
  content="width=device-width,initial-scale=1">
 
 <title>
-降雨監視モニター
+降雨監視モニターaa
 </title>
 
 <link
@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニター
+☔ 降雨監視モニターa
 </h2>
 
 </header>
@@ -319,24 +319,71 @@ function buildPointInfo(){
  p.pixelY
 );
 
-if(p.name === "広島駅"){
-
- window.hiroshimaTileUrl =
- `https://www.jma.go.jp/bosai/jmatile/data/nowc/20261110130000/none/20261110130000/surf/hrpns/${zoom}/${p.tileX}/${p.tileY}.png`;
-
- window.hiroshimaPixelX =
- p.pixelX;
-
- window.hiroshimaPixelY =
- p.pixelY;
-
-}
 
  });
 
 }
 
 buildPointInfo();
+
+async function getPointRgb(p){
+
+ const validTime =
+ "20261110130000";
+
+ const url =
+ `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/8/${p.tileX}/${p.tileY}.png`;
+
+ const res =
+ await fetch(url);
+
+ const blob =
+ await res.blob();
+
+ const img =
+ await createImageBitmap(blob);
+
+ const canvas =
+ document.createElement(
+  "canvas"
+ );
+
+ canvas.width = 256;
+ canvas.height = 256;
+
+ const ctx =
+ canvas.getContext("2d");
+
+ ctx.drawImage(
+  img,
+  0,
+  0
+ );
+
+ return ctx.getImageData(
+  p.pixelX,
+  p.pixelY,
+  1,
+  1
+ ).data;
+
+}
+
+async function testAllPoints(){
+
+ for(const p of points){
+
+  const rgb =
+  await getPointRgb(p);
+
+  console.log(
+   p.name,
+   rgb
+  );
+
+ }
+
+}
 
 points.forEach(p=>{
 
@@ -352,133 +399,7 @@ points.forEach(p=>{
 
 console.log(points);
 
-
-async function testPixelRead(){
-
- try{
-
-
- const url =
-window.hiroshimaTileUrl;
-
-  console.log(
-   "URL",
-   url
-  );
-
-  const res =
-  await fetch(url);
-
-  console.log(
-   "status",
-   res.status
-  );
-
-  const blob =
-  await res.blob();
-
-  console.log(
-   "blob type",
-   blob.type
-  );
-
-  const img =
-  new Image();
-
-  img.onload =
-function(){
-
- console.log(
-  "image loaded"
- );
-
- console.log(
- "image size",
- img.width,
- img.height
-);
-
- try{
-
-  const canvas =
-  document.createElement(
-   "canvas"
-  );
-
-  canvas.width =
-  img.width;
-
-  canvas.height =
-  img.height;
-
-  const ctx =
-  canvas.getContext(
-   "2d"
-  );
-
-  ctx.drawImage(
-   img,
-   0,
-   0
-  );
-
-  console.log(
-   "canvas draw ok"
-  );
-
-const rgb =
-ctx.getImageData(
- window.hiroshimaPixelX,
- window.hiroshimaPixelY,
- 1,
- 1
-).data;
-
-console.log(
- "HIROSHIMA RGB",
- rgb
-);
-
-
- }
- catch(e){
-
-  console.error(
-   "Canvas Error",
-   e
-  );
-
- }
-
-};
-
-
-  img.onerror =
-  function(){
-
-   console.log(
-    "image error"
-   );
-
-  };
-
-  img.src =
-  URL.createObjectURL(
-   blob
-  );
-
- }
- catch(e){
-
-  console.error(
-   e
-  );
-
- }
-
-}
-
-testPixelRead();
+testAllPoints();
 
 
 </script>
