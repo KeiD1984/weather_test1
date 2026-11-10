@@ -353,18 +353,31 @@ function(){
    "canvas draw ok"
   );
 
-const rgb =
-ctx.getImageData(
- 128,
- 128,
- 1,
- 1
-).data;
+[
+ [52,236],
+ [128,128],
+ [10,10],
+ [200,200]
+].forEach(pos=>{
 
-  console.log(
-   "RGB",
-   rgb
-  );
+ const rgb =
+ ctx.getImageData(
+  pos[0],
+  pos[1],
+  1,
+  1
+ ).data;
+
+ console.log(
+  "PIXEL",
+  pos[0],
+  pos[1],
+  rgb
+ );
+
+});
+  
+
 
   alert(
    `RGB=${rgb[0]},${rgb[1]},${rgb[2]}`
