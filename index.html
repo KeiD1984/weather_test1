@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターC
+☔ 降雨監視モニターA
 </h2>
 
 </header>
@@ -331,11 +331,26 @@ async function getLatestTime(){
  const url =
  "https://www.jma.go.jp/bosai/jmatile/data/nowc/targetTimes_N1.json";
 
+ console.log(
+  "FETCH",
+  url
+ );
+
  const res =
  await fetch(url);
 
+ console.log(
+  "STATUS",
+  res.status
+ );
+
  const json =
  await res.json();
+
+ console.log(
+  "JSON",
+  json
+ );
 
  return json[0].basetime;
 
@@ -384,45 +399,9 @@ console.log(
   0
  );
 
- let found = false;
 
-for(let y=0;y<256;y+=16){
 
- for(let x=0;x<256;x+=16){
 
-  const rgb =
-  ctx.getImageData(
-   x,
-   y,
-   1,
-   1
-  ).data;
-
-  if(rgb[3] > 0){
-
-   console.log(
-    "RAIN FOUND",
-    p.name,
-    x,
-    y,
-    rgb
-   );
-
-   found = true;
-  }
-
- }
-
-}
-
-if(!found){
-
- console.log(
-  "NO RAIN IN TILE",
-  p.name
- );
-
-}
 
 let rainFound = false;
 
