@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターa
+☔ 降雨監視モニターab
 </h2>
 
 </header>
@@ -331,8 +331,9 @@ async function getPointRgb(p){
  const validTime =
  "20261110130000";
 
+
  const url =
- `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/8/${p.tileX}/${p.tileY}.png`;
+"https://www.jma.go.jp/bosai/jmatile/data/nowc/20261110130000/none/20261110130000/surf/hrpns/10/913/375.png";
 
  const res =
  await fetch(url);
@@ -360,12 +361,12 @@ async function getPointRgb(p){
   0
  );
 
- return ctx.getImageData(
-  p.pixelX,
-  p.pixelY,
-  1,
-  1
- ).data;
+return ctx.getImageData(
+ 128,
+ 128,
+ 1,
+ 1
+).data;
 
 }
 
