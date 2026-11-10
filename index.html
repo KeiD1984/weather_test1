@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターC
+☔ 降雨監視モニターA
 </h2>
 
 </header>
@@ -363,6 +363,46 @@ async function getPointRgb(p){
   0,
   0
  );
+
+ let found = false;
+
+for(let y=0;y<256;y+=16){
+
+ for(let x=0;x<256;x+=16){
+
+  const rgb =
+  ctx.getImageData(
+   x,
+   y,
+   1,
+   1
+  ).data;
+
+  if(rgb[3] > 0){
+
+   console.log(
+    "RAIN FOUND",
+    p.name,
+    x,
+    y,
+    rgb
+   );
+
+   found = true;
+  }
+
+ }
+
+}
+
+if(!found){
+
+ console.log(
+  "NO RAIN IN TILE",
+  p.name
+ );
+
+}
 
  const rgb =
  ctx.getImageData(
