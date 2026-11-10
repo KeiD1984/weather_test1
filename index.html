@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターaaa
+☔ 降雨監視モニター
 </h2>
 
 </header>
@@ -426,25 +426,28 @@ function(){
    "canvas draw ok"
   );
 
-const rgb =
-ctx.getImageData(
- window.hiroshimaPixelX,
- window.hiroshimaPixelY,
- 1,
- 1
-).data;
+for(let dy=-2;dy<=2;dy++){
 
-console.log(
- "HIROSHIMA RGB",
- rgb
-);
+ for(let dx=-2;dx<=2;dx++){
 
+  const rgb =
+  ctx.getImageData(
+   window.hiroshimaPixelX + dx,
+   window.hiroshimaPixelY + dy,
+   1,
+   1
+  ).data;
 
-console.log(
- "rain pixel count",
- found
-);
+  console.log(
+   "AREA",
+   dx,
+   dy,
+   rgb
+  );
 
+ }
+
+}
 
  }
  catch(e){
