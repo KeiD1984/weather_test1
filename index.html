@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターa
+☔ 降雨監視モニターaa
 </h2>
 
 </header>
@@ -285,8 +285,8 @@ async function testPixelRead(){
 
  try{
 
-  const url =
 
+  const url =
 "https://www.jma.go.jp/bosai/jmatile/data/nowc/20261110130000/none/20261110130000/surf/hrpns/10/913/375.png";
 
   console.log(
@@ -467,6 +467,17 @@ function checkTilePosition(){
  Math.floor(
   point.y / 256
  );
+
+const validTime =
+"20261110130000";
+
+const tileUrl =
+`https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/${zoom}/${tileX}/${tileY}.png`;
+
+console.log(
+ "HIROSHIMA TILE URL",
+ tileUrl
+);
 
  const pixelX =
  Math.floor(
