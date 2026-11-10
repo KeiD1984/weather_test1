@@ -9,7 +9,7 @@
  content="width=device-width,initial-scale=1">
 
 <title>
-降雨監視モニターaa
+降雨監視モニター
 </title>
 
 <link
@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニター
+☔ 降雨監視モニターA
 </h2>
 
 </header>
@@ -366,22 +366,49 @@ console.log(
   0
  );
 
+
+let count = 0;
+
+for(let y=0;y<256;y+=8){
+
+ for(let x=0;x<256;x+=8){
+
+  const rgb =
+  ctx.getImageData(
+   x,
+   y,
+   1,
+   1
+  ).data;
+
+  if(rgb[3] > 0){
+
+   console.log(
+    "RAIN PIXEL",
+    x,
+    y,
+    rgb
+   );
+
+   count++;
+
+   if(count >= 20){
+     return rgb;
+   }
+
+  }
+
+ }
+
+}
+
 console.log(
- "CHECK CENTER PIXEL"
+ "NO RAIN PIXEL"
 );
 
-const rgb =
-ctx.getImageData(
- 128,
- 128,
- 1,
- 1
-).data;
+return [0,0,0,0];
 
-console.log(
- "RGB CENTER",
- rgb
-);
+
 
 return rgb;
 
