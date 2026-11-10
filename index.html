@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターaa
+☔ 降雨監視モニター
 </h2>
 
 </header>
@@ -353,35 +353,52 @@ function(){
    "canvas draw ok"
   );
 
-[
- [52,236],
- [128,128],
- [10,10],
- [200,200]
-].forEach(pos=>{
+let found = 0;
 
- const rgb =
- ctx.getImageData(
-  pos[0],
-  pos[1],
-  1,
-  1
- ).data;
+for(let y=0;y<256;y+=8){
 
- console.log(
-  "PIXEL",
-  pos[0],
-  pos[1],
-  rgb
- );
+ for(let x=0;x<256;x+=8){
 
-});
-  
+  const rgb =
+  ctx.getImageData(
+   x,
+   y,
+   1,
+   1
+  ).data;
 
+  if(rgb[3] > 0){
 
-  alert(
-   `RGB=${rgb[0]},${rgb[1]},${rgb[2]}`
-  );
+   console.log(
+    "RAIN PIXEL",
+    x,
+    y,
+    rgb
+   );
+
+   found++;
+
+   if(found >= 20){
+
+    console.log(
+     "STOP SEARCH"
+    );
+
+    return;
+
+   }
+
+  }
+
+ }
+
+}
+
+console.log(
+ "rain pixel count",
+ found
+);
+
 
  }
  catch(e){
