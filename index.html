@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターA
+☔ 降雨監視モニターB
 </h2>
 
 </header>
@@ -238,7 +238,8 @@ document.getElementById(
 points.forEach(
  p=>{
 
-  p.marker =
+
+p.marker =
 L.circleMarker(
  [p.lat,p.lon],
  {
@@ -256,15 +257,8 @@ L.circleMarker(
   permanent:true,
   direction:"top"
  }
- );
+);
 
-  .bindTooltip(
-   p.name,
-   {
-    permanent:true,
-    direction:"top"
-   }
-  );
 
 tbody.innerHTML += `
 <tr>
