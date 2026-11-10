@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターKAN
+☔ 降雨監視モニターA
 </h2>
 
 </header>
@@ -238,17 +238,26 @@ document.getElementById(
 points.forEach(
  p=>{
 
-  L.circleMarker(
-   [p.lat,p.lon],
-   {
-    radius:8,
-    fillColor:"#000000",
-    color:"#ffffff",
-    weight:2,
-    fillOpacity:1
-   }
-  )
-  .addTo(map)
+  p.marker =
+L.circleMarker(
+ [p.lat,p.lon],
+ {
+  radius:10,
+  fillColor:"#cccccc",
+  color:"#ffffff",
+  weight:2,
+  fillOpacity:1
+ }
+)
+.addTo(map)
+.bindTooltip(
+ p.name,
+ {
+  permanent:true,
+  direction:"top"
+ }
+ );
+
   .bindTooltip(
    p.name,
    {
@@ -261,9 +270,10 @@ tbody.innerHTML += `
 <tr>
  <td>${p.name}</td>
 
- <td id="rain-${p.name}">
+ <td id="rain-${p.name}"
+    style="font-weight:bold;">
  取得中...
- </td>
+</td>
 
  <td>-</td>
 
@@ -401,6 +411,15 @@ function rainText(rgb){
  return "降雨あり";
 }
 
+function rainColor(rgb){
+
+ if(rgb[3] === 0){
+  return "#ffffff";
+ }
+
+ return "#66ccff";
+}
+
 async function testAllPoints(){
 
  for(const p of points){
@@ -408,15 +427,20 @@ async function testAllPoints(){
   const rgb =
   await getPointRgb(p);
 
-  console.log(
- p.name,
- rainText(rgb)
-);
+  const cell =
+  document.getElementById(
+   `rain-${p.name}`
+  );
 
-document.getElementById(
- `rain-${p.name}`
-).textContent =
- rainText(rgb);
+  cell.textContent =
+   rainText(rgb);
+
+  cell.style.backgroundColor =
+   rainColor(rgb);
+
+  p.marker.setStyle({
+   fillColor: rainColor(rgb)
+  });
 
  }
 
