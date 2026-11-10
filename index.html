@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターA
+☔ 降雨監視モニターAB
 </h2>
 
 </header>
@@ -366,10 +366,14 @@ console.log(
   0
  );
 
+console.log(
+ "CHECK CENTER PIXEL"
+);
+
 const rgb =
 ctx.getImageData(
- p.pixelX,
- p.pixelY,
+ 128,
+ 128,
  1,
  1
 ).data;
