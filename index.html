@@ -279,6 +279,93 @@ points.forEach(
  }
 );
 
+async function testPixelRead(){
+
+ try{
+
+  const validTime =
+  "20261109111000";
+
+  const img = new Image();
+
+  img.crossOrigin =
+  "anonymous";
+
+  img.onload =
+  function(){
+
+   try{
+
+    const canvas =
+    document.createElement(
+     "canvas"
+    );
+
+    canvas.width =
+    img.width;
+
+    canvas.height =
+    img.height;
+
+    const ctx =
+    canvas.getContext(
+     "2d"
+    );
+
+    ctx.drawImage(
+     img,
+     0,
+     0
+    );
+
+    const px =
+    ctx.getImageData(
+     10,
+     10,
+     1,
+     1
+    ).data;
+
+    console.log(
+     "RGB",
+     px
+    );
+
+    alert(
+     `RGB = ${px[0]}, ${px[1]}, ${px[2]}`
+    );
+
+   }
+   catch(e){
+
+    console.error(
+     "getImageData Error",
+     e
+    );
+
+    alert(
+     "ピクセル取得失敗"
+    );
+
+   }
+
+  };
+
+  img.src =
+  `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/9/455/202.png`;
+
+ }
+ catch(e){
+
+  console.error(e);
+
+ }
+
+}
+
+testPixelRead();
+
+
 </script>
 
 </body>
