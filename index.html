@@ -282,110 +282,73 @@ points.forEach(
 
 async function testPixelRead(){
 
- console.log("STEP1 start");
-
  try{
 
   const validTime =
   "20261109111000";
 
-  const img = new Image();
+  const url =
+  `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/9/455/202.png`;
 
-  img.crossOrigin =
-  "anonymous";
+  console.log(
+   "URL",
+   url
+  );
+
+  const res =
+  await fetch(url);
+
+  console.log(
+   "PNG fetch status",
+   res.status
+  );
+
+  const blob =
+  await res.blob();
+
+  console.log(
+   "blob",
+   blob
+  );
+
+  const img =
+  new Image();
 
   img.onload =
   function(){
 
-   console.log("STEP2 image loaded");
-
-   try{
-
-    const canvas =
-    document.createElement(
-     "canvas"
-    );
-
-    canvas.width =
-    img.width;
-
-    canvas.height =
-    img.height;
-
-    const ctx =
-    canvas.getContext(
-     "2d"
-    );
-
-    ctx.drawImage(
-     img,
-     0,
-     0
-    );
-
-    console.log("STEP3 drawImage OK");
-
-    const px =
-    ctx.getImageData(
-     10,
-     10,
-     1,
-     1
-    ).data;
-
-    console.log(
-     "RGB",
-     px
-    );
-
-    alert(
-     `RGB = ${px[0]}, ${px[1]}, ${px[2]}`
-    );
-
-   }
-   catch(e){
-
-    console.error(
-     "getImageData Error",
-     e
-    );
-
-   }
-
-  };
-
-  img.onerror =
-  function(e){
-
-   console.error(
-    "IMAGE LOAD ERROR",
-    e
+   console.log(
+    "BLOB IMAGE LOADED"
    );
 
   };
 
-  const testUrl =
-  `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/9/455/202.png`;
+  img.onerror =
+  function(){
 
-  console.log(
-   "STEP1.5 URL",
-   testUrl
-  );
+   console.log(
+    "BLOB IMAGE ERROR"
+   );
+
+  };
 
   img.src =
-  testUrl;
+  URL.createObjectURL(
+   blob
+  );
 
  }
  catch(e){
 
   console.error(
-   "STEP0 Error",
    e
   );
 
  }
 
 }
+
+
 
 testPixelRead();
 
