@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニター
+☔ 降雨監視モニターあ
 </h2>
 
 </header>
@@ -313,13 +313,69 @@ async function testPixelRead(){
   new Image();
 
   img.onload =
-  function(){
+function(){
 
-   console.log(
-    "image loaded"
-   );
+ console.log(
+  "image loaded"
+ );
 
-  };
+ try{
+
+  const canvas =
+  document.createElement(
+   "canvas"
+  );
+
+  canvas.width =
+  img.width;
+
+  canvas.height =
+  img.height;
+
+  const ctx =
+  canvas.getContext(
+   "2d"
+  );
+
+  ctx.drawImage(
+   img,
+   0,
+   0
+  );
+
+  console.log(
+   "canvas draw ok"
+  );
+
+  const rgb =
+  ctx.getImageData(
+   52,
+   236,
+   1,
+   1
+  ).data;
+
+  console.log(
+   "RGB",
+   rgb
+  );
+
+  alert(
+   `RGB=${rgb[0]},${rgb[1]},${rgb[2]}`
+  );
+
+ }
+ catch(e){
+
+  console.error(
+   "Canvas Error",
+   e
+  );
+
+ }
+
+};
+
 
   img.onerror =
   function(){
