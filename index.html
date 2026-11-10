@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターB
+☔ 降雨監視モニターC
 </h2>
 
 </header>
@@ -326,10 +326,25 @@ function buildPointInfo(){
 
 buildPointInfo();
 
+async function getLatestTime(){
+
+ const url =
+ "https://www.jma.go.jp/bosai/jmatile/data/nowc/targetTimes_N1.json";
+
+ const res =
+ await fetch(url);
+
+ const json =
+ await res.json();
+
+ return json[0].basetime;
+
+}
+
 async function getPointRgb(p){
 
- const validTime =
- "20261110130000";
+const validTime =
+ await getLatestTime();
 
  const url =
  `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/8/${p.tileX}/${p.tileY}.png`;
@@ -339,6 +354,11 @@ async function getPointRgb(p){
   p.name,
   url
  );
+
+console.log(
+ "LATEST TIME",
+ validTime
+);
 
  const res =
  await fetch(url);
