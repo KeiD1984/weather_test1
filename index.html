@@ -354,20 +354,19 @@ testPixelRead();
 
 function checkTilePosition(){
 
- const lat = 34.3977;
- const lon = 132.4757;
+ const lat =
+ 34.3977;
 
- const zoom = 8;
+ const lon =
+ 132.4757;
+
+ const zoom =
+ 8;
 
  const point =
  map.project(
-  [lat, lon],
+  [lat,lon],
   zoom
- );
-
- console.log(
-  "pixel",
-  point
  );
 
  const tileX =
@@ -380,16 +379,32 @@ function checkTilePosition(){
   point.y / 256
  );
 
+ const pixelX =
+ Math.floor(
+  point.x % 256
+ );
+
+ const pixelY =
+ Math.floor(
+  point.y % 256
+ );
+
  console.log(
   "tile",
-  zoom,
   tileX,
   tileY
+ );
+
+ console.log(
+  "pixel",
+  pixelX,
+  pixelY
  );
 
 }
 
 checkTilePosition();
+
 
 </script>
 
