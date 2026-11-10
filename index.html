@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターKAN
+☔ 降雨監視モニターKANN
 </h2>
 
 </header>
@@ -258,11 +258,14 @@ points.forEach(
   );
 
   tbody.innerHTML += `
-   <tr>
-    <td id="rain-${p.name}">取得中...</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
+
+<tr>
+ <td>${p.name}</td>
+ <td id="rain-${p.name}">
+ 取得中...
+ </td>
+ <td>-</td>
+ <td>-</td>
     <td>
      <button
       onclick="
