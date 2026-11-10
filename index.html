@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターA
+☔ 降雨監視モニターC
 </h2>
 
 </header>
@@ -331,15 +331,15 @@ async function getPointRgb(p){
  const validTime =
  "20261110130000";
 
-
  const url =
-"https://www.jma.go.jp/bosai/jmatile/data/nowc/20261110130000/none/20261110130000/surf/hrpns/10/913/375.png";
+ `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/8/${p.tileX}/${p.tileY}.png`;
 
-console.log(
- "GET",
- p.name,
- url
-);
+ console.log(
+  "GET",
+  p.name,
+  url
+ );
+
  const res =
  await fetch(url);
 
@@ -350,9 +350,7 @@ console.log(
  await createImageBitmap(blob);
 
  const canvas =
- document.createElement(
-  "canvas"
- );
+ document.createElement("canvas");
 
  canvas.width = 256;
  canvas.height = 256;
@@ -366,58 +364,21 @@ console.log(
   0
  );
 
+ const rgb =
+ ctx.getImageData(
+  p.pixelX,
+  p.pixelY,
+  1,
+  1
+ ).data;
 
-let count = 0;
-
-for(let y=0;y<256;y+=8){
-
- for(let x=0;x<256;x+=8){
-
-  const rgb =
-  ctx.getImageData(
-   x,
-   y,
-   1,
-   1
-  ).data;
-
-  if(rgb[3] > 0){
-
-   console.log(
-    "RAIN PIXEL",
-    x,
-    y,
-    rgb
-   );
-
-   count++;
-
-   if(count >= 20){
-     return rgb;
-   }
-
-  }
-
- }
-
-}
-
-console.log(
- "NO RAIN PIXEL"
-);
-
-return [0,0,0,0];
-
-
-
-return rgb;
+ return rgb;
 
 }
 
 async function testAllPoints(){
 
-const p =
-points[2];
+ for(const p of points){
 
   const rgb =
   await getPointRgb(p);
@@ -429,6 +390,7 @@ points[2];
 
  }
 
+}
 
 points.forEach(p=>{
 
