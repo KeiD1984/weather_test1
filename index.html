@@ -279,79 +279,79 @@ points.forEach(
  }
 );
 
+function buildPointInfo(){
 
-function checkTilePosition(){
+ points.forEach(p=>{
 
- const lat =
- 34.3977;
+  const zoom = 8;
 
- const lon =
- 132.4757;
+  const point =
+  map.project(
+   [p.lat,p.lon],
+   zoom
+  );
 
- const zoom =
- 8;
+  p.tileX =
+  Math.floor(
+   point.x / 256
+  );
 
- const point =
- map.project(
-  [lat,lon],
-  zoom
- );
+  p.tileY =
+  Math.floor(
+   point.y / 256
+  );
 
- const tileX =
- Math.floor(
-  point.x / 256
- );
+  p.pixelX =
+  Math.floor(
+   point.x % 256
+  );
 
- const tileY =
- Math.floor(
-  point.y / 256
- );
+  p.pixelY =
+  Math.floor(
+   point.y % 256
+  );
 
-const validTime =
-"20261110130000";
-
-const tileUrl =
-`https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/${zoom}/${tileX}/${tileY}.png`;
-
-console.log(
- "HIROSHIMA TILE URL",
- tileUrl
+ console.log(
+ p.name,
+ p.tileX,
+ p.tileY,
+ p.pixelX,
+ p.pixelY
 );
 
- const pixelX =
- Math.floor(
-  point.x % 256
- );
+if(p.name === "広島駅"){
 
- const pixelY =
- Math.floor(
-  point.y % 256
- );
+ window.hiroshimaTileUrl =
+ `https://www.jma.go.jp/bosai/jmatile/data/nowc/20261110130000/none/20261110130000/surf/hrpns/${zoom}/${p.tileX}/${p.tileY}.png`;
 
- console.log(
-  "tile",
-  tileX,
-  tileY
- );
+ window.hiroshimaPixelX =
+ p.pixelX;
 
- console.log(
-  "pixel",
-  pixelX,
-  pixelY
- );
-
-window.hiroshimaTileUrl =
-tileUrl;
-
-window.hiroshimaPixelX =
-pixelX;
-
-window.hiroshimaPixelY =
-pixelY;
+ window.hiroshimaPixelY =
+ p.pixelY;
 
 }
 
-checkTilePosition();
+ });
+
+}
+
+buildPointInfo();
+
+points.forEach(p=>{
+
+ console.log(
+  p.name,
+  p.tileX,
+  p.tileY,
+  p.pixelX,
+  p.pixelY
+ );
+
+});
+
+console.log(points);
+
 
 async function testPixelRead(){
 
@@ -426,28 +426,19 @@ function(){
    "canvas draw ok"
   );
 
-for(let dy=-2;dy<=2;dy++){
+const rgb =
+ctx.getImageData(
+ window.hiroshimaPixelX,
+ window.hiroshimaPixelY,
+ 1,
+ 1
+).data;
 
- for(let dx=-2;dx<=2;dx++){
+console.log(
+ "HIROSHIMA RGB",
+ rgb
+);
 
-  const rgb =
-  ctx.getImageData(
-   window.hiroshimaPixelX + dx,
-   window.hiroshimaPixelY + dy,
-   1,
-   1
-  ).data;
-
-  console.log(
-   "AREA",
-   dx,
-   dy,
-   rgb
-  );
-
- }
-
-}
 
  }
  catch(e){
