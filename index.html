@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターab
+☔ 降雨監視モニター
 </h2>
 
 </header>
@@ -335,6 +335,11 @@ async function getPointRgb(p){
  const url =
 "https://www.jma.go.jp/bosai/jmatile/data/nowc/20261110130000/none/20261110130000/surf/hrpns/10/913/375.png";
 
+console.log(
+ "GET",
+ p.name,
+ url
+);
  const res =
  await fetch(url);
 
@@ -361,18 +366,30 @@ async function getPointRgb(p){
   0
  );
 
-return ctx.getImageData(
- 128,
- 128,
+const rgb =
+ctx.getImageData(
+ p.pixelX,
+ p.pixelY,
  1,
  1
 ).data;
+
+console.log(
+ "RGB",
+ p.name,
+ p.pixelX,
+ p.pixelY,
+ rgb
+);
+
+return rgb;
 
 }
 
 async function testAllPoints(){
 
- for(const p of points){
+const p =
+points[2];
 
   const rgb =
   await getPointRgb(p);
