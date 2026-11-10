@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターB
+☔ 降雨監視モニターC
 </h2>
 
 </header>
@@ -349,17 +349,6 @@ const validTime =
  const url =
  `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/8/${p.tileX}/${p.tileY}.png`;
 
- console.log(
-  "GET",
-  p.name,
-  url
- );
-
-console.log(
- "LATEST TIME",
- validTime
-);
-
  const res =
  await fetch(url);
 
@@ -396,6 +385,15 @@ console.log(
 
 }
 
+function rainText(rgb){
+
+ if(rgb[3] === 0){
+  return "降雨なし";
+ }
+
+ return "降雨あり";
+}
+
 async function testAllPoints(){
 
  for(const p of points){
@@ -404,9 +402,9 @@ async function testAllPoints(){
   await getPointRgb(p);
 
   console.log(
-   p.name,
-   rgb
-  );
+ p.name,
+ rainText(rgb)
+);
 
  }
 
