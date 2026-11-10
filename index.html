@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターあ
+☔ 降雨監視モニターa
 </h2>
 
 </header>
@@ -286,7 +286,7 @@ async function testPixelRead(){
  try{
 
   const url =
-  "https://www.jma.go.jp/bosai/jmatile/data/nowc/20261110122500/none/20261110122500/surf/hrpns/8/222/102.png";
+"https://www.jma.go.jp/bosai/jmatile/data/nowc/20261110122500/none/20261110122500/surf/hrpns/8/222/101.png";
 
   console.log(
    "URL",
@@ -319,6 +319,12 @@ function(){
   "image loaded"
  );
 
+ console.log(
+ "image size",
+ img.width,
+ img.height
+);
+
  try{
 
   const canvas =
@@ -347,13 +353,13 @@ function(){
    "canvas draw ok"
   );
 
-  const rgb =
-  ctx.getImageData(
-   52,
-   236,
-   1,
-   1
-  ).data;
+const rgb =
+ctx.getImageData(
+ 128,
+ 128,
+ 1,
+ 1
+).data;
 
   console.log(
    "RGB",
