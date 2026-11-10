@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターC
+☔ 降雨監視モニターKAN
 </h2>
 
 </header>
@@ -259,7 +259,7 @@ points.forEach(
 
   tbody.innerHTML += `
    <tr>
-    <td>${p.name}</td>
+    <td id="rain-${p.name}">取得中...</td>
     <td>-</td>
     <td>-</td>
     <td>-</td>
@@ -405,6 +405,11 @@ async function testAllPoints(){
  p.name,
  rainText(rgb)
 );
+
+document.getElementById(
+ `rain-${p.name}`
+).textContent =
+ rainText(rgb);
 
  }
 
