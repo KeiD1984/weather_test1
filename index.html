@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターB
+☔ 降雨監視モニターC
 </h2>
 
 </header>
@@ -294,60 +294,60 @@ document.getElementById(
  "siteTable"
 );
 
+function addMonitoringPoint(p){
+
+ p.marker =
+ L.circleMarker(
+  [p.lat,p.lon],
+  {
+   radius:10,
+   fillColor:"#cccccc",
+   color:"#ffffff",
+   weight:2,
+   fillOpacity:1
+  }
+ )
+ .addTo(map)
+ .bindTooltip(
+  p.name,
+  {
+   permanent:true,
+   direction:"top"
+  }
+ );
+
+ tbody.innerHTML += `
+ <tr>
+  <td>${p.name}</td>
+
+  <td id="rain-${p.name}"
+      style="font-weight:bold;">
+   取得中...
+  </td>
+
+  <td>-</td>
+
+  <td>-</td>
+
+  <td>
+   <button
+    onclick="
+    moveToPoint(
+     ${p.lat},
+     ${p.lon}
+    )">
+    📍
+   </button>
+  </td>
+
+ </tr>
+ `;
+}
+
 points.forEach(
- p=>{
-
-
-p.marker =
-L.circleMarker(
- [p.lat,p.lon],
- {
-  radius:10,
-  fillColor:"#cccccc",
-  color:"#ffffff",
-  weight:2,
-  fillOpacity:1
- }
-)
-.addTo(map)
-.bindTooltip(
- p.name,
- {
-  permanent:true,
-  direction:"top"
- }
+ p => addMonitoringPoint(p)
 );
 
-
-tbody.innerHTML += `
-<tr>
- <td>${p.name}</td>
-
- <td id="rain-${p.name}"
-    style="font-weight:bold;">
- 取得中...
-</td>
-
- <td>-</td>
-
- <td>-</td>
-
- <td>
-  <button
-   onclick="
-   moveToPoint(
-    ${p.lat},
-    ${p.lon}
-   )">
-   📍
-  </button>
- </td>
-</tr>
-`;
-
-
- }
-);
 
 function buildPointInfo(){
 
