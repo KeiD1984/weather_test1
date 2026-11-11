@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターA
+☔ 降雨監視モニターB
 </h2>
 
 </header>
@@ -591,14 +591,20 @@ const validTime =
 function rainText(rgb){
 
  if(rgb[3] === 0){
-
   return "降雨なし";
-
  }
 
  const r = rgb[0];
  const g = rgb[1];
  const b = rgb[2];
+
+ if(
+  r === 160 &&
+  g === 210 &&
+  b === 255
+ ){
+  return "1～5mm/h";
+ }
 
  return `${r},${g},${b}`;
 
@@ -610,7 +616,16 @@ function rainColor(rgb){
   return "#ffffff";
  }
 
+ if(
+  rgb[0] === 160 &&
+  rgb[1] === 210 &&
+  rgb[2] === 255
+ ){
+  return "#a0d2ff";
+ }
+
  return "#66ccff";
+
 }
 
 function startAutoUpdate(){
