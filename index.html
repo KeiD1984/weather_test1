@@ -77,6 +77,26 @@ th,td{
  text-align:center;
 }
 
+.linkButtons{
+
+ display:flex;
+
+ flex-wrap:wrap;
+
+ gap:8px;
+
+ margin-top:10px;
+
+}
+
+.linkButtons button{
+
+ flex:1;
+
+ min-width:140px;
+
+}
+
 </style>
 
 </head>
@@ -86,7 +106,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターB
+☔ 降雨監視モニターC
 </h2>
 
 </header>
@@ -152,6 +172,48 @@ th,td{
 </tbody>
 
 </table>
+
+</div>
+
+<div class="card">
+
+<h3>
+気象庁ナウキャスト
+</h3>
+
+<div class="linkButtons">
+
+<button
+ onclick="window.open(
+  'https://www.jma.go.jp/bosai/nowc/',
+  '_blank'
+ )">
+
+☔ 雨雲の動き
+
+</button>
+
+<button
+ onclick="window.open(
+  'https://www.jma.go.jp/bosai/thunder/',
+  '_blank'
+ )">
+
+⚡ 雷ナウキャスト
+
+</button>
+
+<button
+ onclick="window.open(
+  'https://www.jma.go.jp/bosai/tornado/',
+  '_blank'
+ )">
+
+🌪 竜巻発生確度
+
+</button>
+
+</div>
 
 </div>
 
