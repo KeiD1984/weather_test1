@@ -86,56 +86,24 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターC
+☔ 降雨監視モニターA
 </h2>
 
 </header>
 
 <div id="map"></div>
 
-<div class="card">
+<label>
 
-<h3>
-気象庁ナウキャスト
-</h3>
+<input
+ type="checkbox"
+ id="autoUpdateCheck"
+ checked
+ onchange="toggleAutoUpdate()">
 
-<button
- onclick="window.open(
-  'https://www.jma.go.jp/bosai/nowc/',
-  '_blank'
- )">
+自動更新（5分）
 
-☔ 雨雲の動き
-
-</button>
-
-<button
- onclick="window.open(
-  'https://www.jma.go.jp/bosai/thunder/',
-  '_blank'
- )">
-
-⚡ 雷ナウキャスト
-
-</button>
-
-<button
- onclick="window.open(
-  'https://www.jma.go.jp/bosai/tornado/',
-  '_blank'
- )">
-
-🌪 竜巻発生確度
-
-</button>
-
-<button
- id="autoBtn"
- onclick="toggleAutoUpdate()">
-
-⏱ 自動更新ON
-
-</button>
+</label>
 
 <button onclick="testAllPoints()">
 🔄 今すぐ更新
@@ -278,16 +246,120 @@ function moveToCurrentLocation(){
    const lon =
    pos.coords.longitude;
 
-   map.setView(
+map.setView(
+ [lat,lon],
+ 12
+);
+
+const exists =
+ points.find(
+  p => p.name === "現在地"
+ );
+
+if(exists){
+
+ exists.lat = lat;
+ exists.lon = lon;
+
+ const zoom = 8;
+
+ const point =
+ map.project(
+  [lat,lon],
+  zoom
+ );
+
+ exists.tileX =
+ Math.floor(point.x / 256);
+
+ exists.tileY =
+ Math.floor(point.y / 256);
+
+ exists.pixelX =
+ Math.floor(point.x % 256);
+
+ exists.pixelY =
+ Math.floor(point.y % 256);
+
+ exists.marker.setLatLng(
+  [lat,lon]
+ );
+
+ exists.marker.setStyle({
+
+  color:"#ff0000",
+
+  weight:3
+
+ });
+
+ testAllPoints();
+
+ return;
+
+}
+
+const p = {
+
+ name:"現在地",
+
+ lat:lat,
+
+ lon:lon,
+
+ isCurrentLocation:true
+
+};
+
+points.push(p);
+
+
+   const zoom = 8;
+
+   const point =
+   map.project(
     [lat,lon],
-    12
+    zoom
    );
+
+   p.tileX =
+   Math.floor(
+    point.x / 256
+   );
+
+   p.tileY =
+   Math.floor(
+    point.y / 256
+   );
+
+   p.pixelX =
+   Math.floor(
+    point.x % 256
+   );
+
+   p.pixelY =
+   Math.floor(
+    point.y % 256
+   );
+
+if(p.name === "現在地"){
+
+ p.isCurrentLocation = true;
+
+}
+
+   addMonitoringPoint(
+    p
+   );
+
+   testAllPoints();
 
   }
 
  );
 
 }
+
 
 const tbody =
 document.getElementById(
@@ -299,13 +371,24 @@ function addMonitoringPoint(p){
  p.marker =
  L.circleMarker(
   [p.lat,p.lon],
-  {
-   radius:10,
-   fillColor:"#cccccc",
-   color:"#ffffff",
-   weight:2,
-   fillOpacity:1
-  }
+
+{
+ radius:10,
+ fillColor:"#cccccc",
+
+ color:
+  p.isCurrentLocation
+   ? "#ff0000"
+   : "#ffffff",
+
+ weight:
+  p.isCurrentLocation
+   ? 3
+   : 2,
+
+ fillOpacity:1
+}
+
  )
  .addTo(map)
  .bindTooltip(
@@ -492,17 +575,11 @@ function toggleAutoUpdate(){
  autoUpdate =
  !autoUpdate;
 
- const btn =
- document.getElementById(
-  "autoBtn"
- );
 
  if(autoUpdate){
 
   startAutoUpdate();
 
-  btn.textContent =
-   "⏱ 自動更新ON";
 
  }else{
 
@@ -510,8 +587,6 @@ function toggleAutoUpdate(){
    updateTimer
   );
 
-  btn.textContent =
-   "⏱ 自動更新OFF";
  }
 
 }
@@ -556,15 +631,51 @@ async function addAddressPoint(){
   ]
  ).addTo(map);
 
-points.push({
+const p = {
 
-  name: address,
+ name: address,
 
-  lat: Number(data[0].lat),
+ lat: Number(data[0].lat),
 
-  lon: Number(data[0].lon)
+ lon: Number(data[0].lon)
 
-});
+};
+
+points.push(p);
+
+const zoom = 8;
+
+const point =
+ map.project(
+  [p.lat,p.lon],
+  zoom
+ );
+
+p.tileX =
+ Math.floor(
+  point.x / 256
+ );
+
+p.tileY =
+ Math.floor(
+  point.y / 256
+ );
+
+p.pixelX =
+ Math.floor(
+  point.x % 256
+ );
+
+p.pixelY =
+ Math.floor(
+  point.y % 256
+ );
+
+addMonitoringPoint(
+ p
+);
+
+testAllPoints();
 
 }
 
