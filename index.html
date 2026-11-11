@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターA
+☔ 降雨監視モニターC
 </h2>
 
 </header>
@@ -246,6 +246,18 @@ function moveToCurrentLocation(){
    const lon =
    pos.coords.longitude;
 
+const reverseUrl =
+`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+
+const reverseRes =
+ await fetch(reverseUrl);
+
+const reverseData =
+ await reverseRes.json();
+
+const currentAddress =
+ reverseData.display_name;
+
 map.setView(
  [lat,lon],
  12
@@ -299,9 +311,26 @@ if(exists){
 
 }
 
+const exists =
+ points.find(
+  p => p.isCurrentLocation
+ );
+
+if(exists){
+
+ alert(
+  "現在地を更新しました"
+ );
+
+ return;
+
+}
+
 const p = {
 
  name:"現在地",
+
+ address:currentAddress
 
  lat:lat,
 
@@ -401,7 +430,18 @@ function addMonitoringPoint(p){
 
  tbody.innerHTML += `
  <tr>
-  <td>${p.name}</td>
+  <td>
+
+${p.name}
+
+<br>
+
+<small>
+${p.address || ""}
+</small>
+
+</td>
+
 
   <td id="rain-${p.name}"
       style="font-weight:bold;">
@@ -598,6 +638,38 @@ async function addAddressPoint(){
   "addressInput"
  ).value;
 
+ const oldPoint =
+ points.find(
+  p => p.isExtraPoint
+ );
+
+if(oldPoint){
+
+ if(oldPoint.marker){
+
+  map.removeLayer(
+   oldPoint.marker
+  );
+
+ }
+
+}
+
+const index =
+ points.findIndex(
+  p => p.isExtraPoint
+ );
+
+if(index >= 0){
+
+ points.splice(
+  index,
+  1
+ );
+
+}
+
+
  if(!address)return;
 
  const url =
@@ -631,13 +703,17 @@ async function addAddressPoint(){
   ]
  ).addTo(map);
 
-const p = {
+ const p = {
 
- name: address,
+ name: "追加地点",
+
+ address: address,
 
  lat: Number(data[0].lat),
 
- lon: Number(data[0].lon)
+ lon: Number(data[0].lon),
+
+ isExtraPoint:true
 
 };
 
