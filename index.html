@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターC
+☔ 降雨監視モニターA
 </h2>
 
 </header>
@@ -129,6 +129,22 @@ th,td{
 
 </button>
 
+<button
+ id="autoBtn"
+ onclick="toggleAutoUpdate()">
+
+⏱ 自動更新ON
+
+</button>
+
+<button id="autoBtn">
+...
+</button>
+
+<div id="lastUpdate">
+未更新
+</div>
+
 </div>
 
 <div class="card">
@@ -157,6 +173,9 @@ th,td{
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
+
+let autoUpdate = true;
+let updateTimer = null;
 
 const points = [
 
@@ -408,10 +427,53 @@ function rainText(rgb){
 function rainColor(rgb){
 
  if(rgb[3] === 0){
-  return "#ff0000";
+  return "#ffffff";
  }
 
- return "#00ff00";
+ return "#66ccff";
+}
+
+function startAutoUpdate(){
+
+ if(updateTimer){
+  clearInterval(updateTimer);
+ }
+
+ updateTimer =
+ setInterval(
+  testAllPoints,
+  300000
+ );
+
+}
+
+function toggleAutoUpdate(){
+
+ autoUpdate =
+ !autoUpdate;
+
+ const btn =
+ document.getElementById(
+  "autoBtn"
+ );
+
+ if(autoUpdate){
+
+  startAutoUpdate();
+
+  btn.textContent =
+   "⏱ 自動更新ON";
+
+ }else{
+
+  clearInterval(
+   updateTimer
+  );
+
+  btn.textContent =
+   "⏱ 自動更新OFF";
+ }
+
 }
 
 async function testAllPoints(){
@@ -420,6 +482,15 @@ async function testAllPoints(){
 
   const rgb =
   await getPointRgb(p);
+
+  console.log(
+ p.name,
+ rgb[0],
+ rgb[1],
+ rgb[2],
+ rgb[3]
+);
+
 
   const cell =
   document.getElementById(
@@ -438,6 +509,14 @@ async function testAllPoints(){
 
  }
 
+ document.getElementById(
+ "lastUpdate"
+).textContent =
+ "更新: " +
+ new Date().toLocaleTimeString(
+  "ja-JP"
+ );
+
 }
 
 points.forEach(p=>{
@@ -455,6 +534,13 @@ points.forEach(p=>{
 console.log(points);
 
 testAllPoints();
+
+startAutoUpdate();
+
+setInterval(
+ testAllPoints,
+ 60000
+);
 
 
 </script>
