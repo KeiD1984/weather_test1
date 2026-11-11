@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターD
+☔ 降雨監視モニターA
 </h2>
 
 </header>
@@ -591,10 +591,17 @@ const validTime =
 function rainText(rgb){
 
  if(rgb[3] === 0){
+
   return "降雨なし";
+
  }
 
- return "降雨あり";
+ const r = rgb[0];
+ const g = rgb[1];
+ const b = rgb[2];
+
+ return `${r},${g},${b}`;
+
 }
 
 function rainColor(rgb){
@@ -786,7 +793,7 @@ document.getElementById(
   const rgb =
   await getPointRgb(p);
 
-console.log(
+  console.log(
  new Date().toLocaleTimeString(),
  p.name,
  rgb[0],
@@ -794,15 +801,6 @@ console.log(
  rgb[2],
  rgb[3]
 );
-
-  console.log(
- p.name,
- rgb[0],
- rgb[1],
- rgb[2],
- rgb[3]
-);
-
 
   const cell =
   document.getElementById(
