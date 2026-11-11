@@ -86,7 +86,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターC
+☔ 降雨監視モニターD
 </h2>
 
 </header>
@@ -234,11 +234,15 @@ function moveToPoint(
 
 }
 
-function moveToCurrentLocation(){
+async function moveToCurrentLocation(){
+
+
+
+
 
  navigator.geolocation.getCurrentPosition(
-
-  pos=>{
+  
+  async (pos)=>{
 
    const lat =
    pos.coords.latitude;
@@ -272,6 +276,26 @@ if(exists){
 
  exists.lat = lat;
  exists.lon = lon;
+
+ exists.address =
+  currentAddress;
+
+const nameCell =
+ document.getElementById(
+  "name-現在地"
+ );
+
+if(nameCell){
+
+ nameCell.innerHTML = `
+  現在地
+  <br>
+  <small>
+   ${currentAddress}
+  </small>
+ `;
+
+}
 
  const zoom = 8;
 
@@ -311,26 +335,11 @@ if(exists){
 
 }
 
-const exists =
- points.find(
-  p => p.isCurrentLocation
- );
-
-if(exists){
-
- alert(
-  "現在地を更新しました"
- );
-
- return;
-
-}
-
 const p = {
 
  name:"現在地",
 
- address:currentAddress
+ address:currentAddress,
 
  lat:lat,
 
@@ -430,7 +439,8 @@ function addMonitoringPoint(p){
 
  tbody.innerHTML += `
  <tr>
-  <td>
+
+  <td id="name-${p.name}">
 
 ${p.name}
 
@@ -643,7 +653,7 @@ async function addAddressPoint(){
   p => p.isExtraPoint
  );
 
-if(oldPoint){
+ if(oldPoint){
 
  if(oldPoint.marker){
 
@@ -653,7 +663,21 @@ if(oldPoint){
 
  }
 
+ const oldCell =
+ document.getElementById(
+  `rain-${oldPoint.name}`
+ );
+
+ if(oldCell){
+
+  oldCell.closest(
+   "tr"
+  ).remove();
+
+ }
+
 }
+
 
 const index =
  points.findIndex(
@@ -696,12 +720,6 @@ if(index >= 0){
   12
  );
 
- L.marker(
-  [
-   Number(data[0].lat),
-   Number(data[0].lon)
-  ]
- ).addTo(map);
 
  const p = {
 
