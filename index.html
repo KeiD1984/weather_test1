@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターF
+☔ 降雨監視モニターA
 </h2>
 
 </header>
@@ -742,32 +742,53 @@ console.log(
 
 async function getPointRgb(p){
 
-const validTime =
- await getLatestTime();
+ const validTime =
+  await getLatestTime();
 
  const url =
-`https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns_nd/8/${p.tileX}/${p.tileY}.png`;
+ `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns_nd/8/${p.tileX}/${p.tileY}.png`;
+
+ console.log("URL", url);
 
  const res =
- await fetch(url);
+  await fetch(url);
 
-console.log(url);
-console.log("status",res.status);
+ console.log(
+  "status",
+  res.status
+ );
+
+ if(!res.ok){
+
+  console.error(
+   "取得失敗",
+   url
+  );
+
+  return [0,0,0,0];
+
+ }
 
  const blob =
- await res.blob();
+  await res.blob();
+
+ console.log(
+  "blob",
+  blob.type,
+  blob.size
+ );
 
  const img =
- await createImageBitmap(blob);
+  await createImageBitmap(blob);
 
  const canvas =
- document.createElement("canvas");
+  document.createElement("canvas");
 
  canvas.width = 256;
  canvas.height = 256;
 
  const ctx =
- canvas.getContext("2d");
+  canvas.getContext("2d");
 
  ctx.drawImage(
   img,
@@ -776,16 +797,26 @@ console.log("status",res.status);
  );
 
  const rgb =
- ctx.getImageData(
-  p.pixelX,
-  p.pixelY,
-  1,
-  1
- ).data;
+  ctx.getImageData(
+   p.pixelX,
+   p.pixelY,
+   1,
+   1
+  ).data;
+
+ console.log(
+  p.name,
+  rgb[0],
+  rgb[1],
+  rgb[2],
+  rgb[3]
+ );
 
  return rgb;
 
 }
+
+
 
 function rainText(rgb){
 
