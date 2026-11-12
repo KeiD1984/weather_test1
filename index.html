@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターD
+☔ 降雨監視モニターA
 </h2>
 
 </header>
@@ -167,13 +167,6 @@ th,td{
 <tr>
 
 <td>
-
-<button
- onclick="moveToCurrentLocation()">
-
-●現在地追加
-
-</button>
 
 </td>
 
@@ -252,7 +245,16 @@ th,td{
 <div class="card">
 
 <h3>
+
 監視地点
+
+<button
+ onclick="moveToCurrentLocation()">
+
+📍現在地
+
+</button>
+
 </h3>
 
 
@@ -846,7 +848,7 @@ function toggleAutoUpdate(){
 
 }
 
-function addLatLonPoint(){
+async function addLatLonPoint(){
 
  const lat =
  Number(
@@ -874,10 +876,38 @@ function addLatLonPoint(){
   return;
  }
 
- map.setView(
+  map.setView(
   [lat,lon],
   12
  );
+
+ const reverseUrl =
+  `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+
+ const reverseRes =
+  await fetch(reverseUrl);
+
+ const reverseData =
+  await reverseRes.json();
+
+ const address =
+  reverseData.display_name;
+
+ const placeName =
+
+  reverseData.name ||
+
+  reverseData.address?.tourism ||
+
+  reverseData.address?.attraction ||
+
+  reverseData.address?.building ||
+
+  reverseData.address?.amenity ||
+
+  reverseData.display_name.split(",")[0] ||
+
+  "追加地点";
 
  const oldPoint =
  points.find(
@@ -925,17 +955,17 @@ function addLatLonPoint(){
 
  const p = {
 
-  name:"追加地点",
+ name:placeName,
 
-  address:`${lat}, ${lon}`,
+ address:address,
 
-  lat:lat,
+ lat:lat,
 
-  lon:lon,
+ lon:lon,
 
-  isExtraPoint:true
+ isExtraPoint:true
 
- };
+};
 
  points.push(p);
 
@@ -1039,6 +1069,12 @@ if(index >= 0){
  const data =
  await res.json();
 
+ const placeName =
+
+ data[0].name ||
+
+ address;
+
  if(data.length===0){
 
   alert("住所が見つかりません");
@@ -1054,16 +1090,15 @@ if(index >= 0){
   12
  );
 
+const p = {
 
- const p = {
+ name:placeName,
 
- name: "追加地点",
+ address:address,
 
- address: address,
+ lat:Number(data[0].lat),
 
- lat: Number(data[0].lat),
-
- lon: Number(data[0].lon),
+ lon:Number(data[0].lon),
 
  isExtraPoint:true
 
