@@ -123,12 +123,19 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターC
+☔ 降雨監視モニターD
 </h2>
 
 </header>
 
 <div id="map"></div>
+
+
+<table>
+
+<tr>
+
+<td>
 
 <label>
 
@@ -142,23 +149,65 @@ th,td{
 
 </label>
 
-<button onclick="testAllPoints()">
-🔄 今すぐ更新
+</td>
+
+<td>
+
+<button
+ onclick="testAllPoints()">
+
+今すぐ更新
+
 </button>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>
 
 <button
  onclick="moveToCurrentLocation()">
 
-📍 現在地
+●現在地追加
 
 </button>
+
+</td>
+
+<td></td>
+
+</tr>
+
+<tr>
+
+<td>
 
 <input
  id="addressInput"
  type="text"
- placeholder="住所入力">
+ placeholder="地点入力">
 
- <br>
+</td>
+
+<td>
+
+<button
+ onclick="addAddressPoint()">
+
+地名で地点追加
+
+</button>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>
 
 <input
  id="latInput"
@@ -172,21 +221,31 @@ th,td{
  step="0.0001"
  placeholder="経度">
 
-<button
- onclick="addAddressPoint()">
-地点追加
-</button>
+</td>
+
+<td>
 
 <button
  onclick="addLatLonPoint()">
 
-緯度経度追加
+緯度経度で地点追加
 
 </button>
 
+</td>
+
+</tr>
+
+</table>
+
+
 <div id="lastUpdate">
-未更新
+
+更新：
+----
+
 </div>
+
 
 </div>
 
@@ -196,70 +255,40 @@ th,td{
 監視地点
 </h3>
 
-<select id="forecastMinutes">
-
-<option value="0">
-現在
-</option>
-
-<option value="5">
-5分後
-</option>
-
-<option value="10">
-10分後
-</option>
-
-<option value="15">
-15分後
-</option>
-
-<option value="20">
-20分後
-</option>
-
-<option value="25">
-25分後
-</option>
-
-<option value="30">
-30分後
-</option>
-
-<option value="35">
-35分後
-</option>
-
-<option value="40">
-40分後
-</option>
-
-<option value="45">
-45分後
-</option>
-
-<option value="50">
-50分後
-</option>
-
-<option value="55">
-55分後
-</option>
-
-<option value="60">
-60分後
-</option>
-
-</select>
-
 
 <table>
 
 <tr>
+
 <th>地点</th>
-<th>降雨状況</th>
+
+<th>
+現在
+</th>
+
+<th>
+
+予報
+
+<br>
+
+<select id="forecastMinutes">
+
+<option value="10">10分後</option>
+<option value="20">20分後</option>
+<option value="30">30分後</option>
+<option value="40">40分後</option>
+<option value="50">50分後</option>
+<option value="60">60分後</option>
+
+</select>
+
+</th>
+
+
 <th>雷</th>
 <th>竜巻</th>
+  
 </tr>
 
 <tbody id="siteTable">
@@ -593,10 +622,11 @@ function addMonitoringPoint(p){
   }
  );
 
- tbody.innerHTML += `
- <tr>
+tbody.innerHTML += `
 
-  <td id="name-${p.name}">
+<tr>
+
+<td id="name-${p.name}">
 
 ${p.name}
 
@@ -608,18 +638,26 @@ ${p.address || ""}
 
 </td>
 
+<td id="current-${p.name}">
+取得中...
+</td>
 
-  <td id="rain-${p.name}"
-      style="font-weight:bold;">
-   取得中...
-  </td>
+<td id="future-${p.name}">
+取得中...
+</td>
 
-  <td>-</td>
+<td>
+-
+</td>
 
-  <td>-</td>
+<td>
+-
+</td>
 
- </tr>
- `;
+</tr>
+
+`;
+
 }
 
 points.forEach(
@@ -857,138 +895,9 @@ function addLatLonPoint(){
   }
 
   const oldCell =
-   document.getElementById(
-    `rain-${oldPoint.name}`
-   );
-
-  if(oldCell){
-
-   oldCell.closest(
-    "tr"
-   ).remove();
-
-  }
-
- }
-
- const index =
-  points.findIndex(
-   p => p.isExtraPoint
-  );
-
- if(index >= 0){
-
-  points.splice(
-   index,
-   1
-  );
-
- }
-
- const p = {
-
-  name:"追加地点",
-
-  address:`${lat}, ${lon}`,
-
-  lat:lat,
-
-  lon:lon,
-
-  isExtraPoint:true
-
- };
-
- points.push(p);
-
- const zoom = 8;
-
- const point =
-  map.project(
-   [p.lat,p.lon],
-   zoom
-  );
-
- p.tileX =
-  Math.floor(
-   point.x / 256
-  );
-
- p.tileY =
-  Math.floor(
-   point.y / 256
-  );
-
- p.pixelX =
-  Math.floor(
-   point.x % 256
-  );
-
- p.pixelY =
-  Math.floor(
-   point.y % 256
-  );
-
- addMonitoringPoint(
-  p
+ document.getElementById(
+  `current-${oldPoint.name}`
  );
-
- testAllPoints();
-
-}
-
-function addLatLonPoint(){
-
- const lat =
- Number(
-  document.getElementById(
-   "latInput"
-  ).value
- );
-
- const lon =
- Number(
-  document.getElementById(
-   "lonInput"
-  ).value
- );
-
- if(
-  isNaN(lat) ||
-  isNaN(lon)
- ){
-
-  alert(
-   "緯度経度を入力してください"
-  );
-
-  return;
- }
-
- map.setView(
-  [lat,lon],
-  12
- );
-
- const oldPoint =
- points.find(
-  p => p.isExtraPoint
- );
-
- if(oldPoint){
-
-  if(oldPoint.marker){
-
-   map.removeLayer(
-    oldPoint.marker
-   );
-
-  }
-
-  const oldCell =
-   document.getElementById(
-    `rain-${oldPoint.name}`
-   );
 
   if(oldCell){
 
@@ -1090,7 +999,7 @@ async function addAddressPoint(){
 
  const oldCell =
  document.getElementById(
-  `rain-${oldPoint.name}`
+  `current-${oldPoint.name}`
  );
 
  if(oldCell){
@@ -1220,16 +1129,28 @@ document.getElementById(
  rgb[3]
 );
 
-  const cell =
-  document.getElementById(
-   `rain-${p.name}`
-  );
+const currentCell =
+ document.getElementById(
+  `current-${p.name}`
+ );
 
-  cell.textContent =
-   rainText(rgb);
+ currentCell.textContent =
+ rainText(rgb);
 
-  cell.style.backgroundColor =
-   rainColor(rgb);
+currentCell.style.backgroundColor =
+ rainColor(rgb);
+
+const futureCell =
+ document.getElementById(
+  `future-${p.name}`
+ );
+
+futureCell.textContent =
+ rainText(rgb);
+
+futureCell.style.backgroundColor =
+ rainColor(rgb);
+
 
   p.marker.setStyle({
    fillColor: rainColor(rgb)
