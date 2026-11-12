@@ -746,7 +746,7 @@ async function getPointRgb(p){
   await getLatestTime();
 
  const url =
- `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns_nd/8/${p.tileX}/${p.tileY}.png`;
+ `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/8/${p.tileX}/${p.tileY}.png`;
 
  console.log("URL", url);
 
@@ -816,8 +816,6 @@ async function getPointRgb(p){
 
 }
 
-
-
 function rainText(rgb){
 
  if(rgb[3] === 0){
@@ -828,16 +826,44 @@ function rainText(rgb){
  const g = rgb[1];
  const b = rgb[2];
 
- if(
-  r === 160 &&
-  g === 210 &&
-  b === 255
- ){
+ // 1～5mm/h
+ if(r===160 && g===210 && b===255){
   return "1～5mm/h";
  }
 
- return `${r},${g},${b}`;
+ // 5～10mm/h
+ if(r===33 && g===140 && b===255){
+  return "5～10mm/h";
+ }
 
+ // 10～20mm/h
+ if(r===255 && g===255 && b===0){
+  return "10～20mm/h";
+ }
+
+ // 20～30mm/h
+ if(r===255 && g===153 && b===0){
+  return "20～30mm/h";
+ }
+
+ // 30～50mm/h
+ if(r===255 && g===40 && b===0){
+  return "30～50mm/h";
+ }
+
+ // 50mm/h以上
+ if(r===180 && g===0 && b===104){
+  return "50mm/h以上";
+ }
+
+ console.log(
+  "未知RGB",
+  r,
+  g,
+  b
+ );
+
+ return `RGB(${r},${g},${b})`;
 }
 
 function rainColor(rgb){
@@ -846,16 +872,35 @@ function rainColor(rgb){
   return "#ffffff";
  }
 
- if(
-  rgb[0] === 160 &&
-  rgb[1] === 210 &&
-  rgb[2] === 255
- ){
+ const r = rgb[0];
+ const g = rgb[1];
+ const b = rgb[2];
+
+ if(r===160 && g===210 && b===255){
   return "#a0d2ff";
  }
 
- return "#66ccff";
+ if(r===33 && g===140 && b===255){
+  return "#218cff";
+ }
 
+ if(r===255 && g===255 && b===0){
+  return "#ffff00";
+ }
+
+ if(r===255 && g===153 && b===0){
+  return "#ff9900";
+ }
+
+ if(r===255 && g===40 && b===0){
+  return "#ff2800";
+ }
+
+ if(r===180 && g===0 && b===104){
+  return "#b40068";
+ }
+
+ return "#cccccc";
 }
 
 function startAutoUpdate(){
