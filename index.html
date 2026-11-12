@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターD
+☔ 降雨監視モニターE
 </h2>
 
 </header>
@@ -731,13 +731,10 @@ async function getLatestTime(){
  const json =
  await res.json();
 
- console.log(
-  JSON.stringify(
-   json[0],
-   null,
-   2
-  )
- );
+console.log(
+ json.slice(0,10)
+);
+
 
  return json[0].basetime;
 
