@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターCCC
+☔ 降雨監視モニターC
 </h2>
 
 </header>
@@ -158,9 +158,30 @@ th,td{
  type="text"
  placeholder="住所入力">
 
+ <br>
+
+<input
+ id="latInput"
+ type="number"
+ step="0.0001"
+ placeholder="緯度">
+
+<input
+ id="lonInput"
+ type="number"
+ step="0.0001"
+ placeholder="経度">
+
 <button
  onclick="addAddressPoint()">
 地点追加
+</button>
+
+<button
+ onclick="addLatLonPoint()">
+
+緯度経度追加
+
 </button>
 
 <div id="lastUpdate">
@@ -175,6 +196,63 @@ th,td{
 監視地点
 </h3>
 
+<select id="forecastMinutes">
+
+<option value="0">
+現在
+</option>
+
+<option value="5">
+5分後
+</option>
+
+<option value="10">
+10分後
+</option>
+
+<option value="15">
+15分後
+</option>
+
+<option value="20">
+20分後
+</option>
+
+<option value="25">
+25分後
+</option>
+
+<option value="30">
+30分後
+</option>
+
+<option value="35">
+35分後
+</option>
+
+<option value="40">
+40分後
+</option>
+
+<option value="45">
+45分後
+</option>
+
+<option value="50">
+50分後
+</option>
+
+<option value="55">
+55分後
+</option>
+
+<option value="60">
+60分後
+</option>
+
+</select>
+
+
 <table>
 
 <tr>
@@ -182,7 +260,6 @@ th,td{
 <th>降雨状況</th>
 <th>雷</th>
 <th>竜巻</th>
-<th>地図</th>
 </tr>
 
 <tbody id="siteTable">
@@ -541,17 +618,6 @@ ${p.address || ""}
 
   <td>-</td>
 
-  <td>
-   <button
-    onclick="
-    moveToPoint(
-     ${p.lat},
-     ${p.lon}
-    )">
-    📍
-   </button>
-  </td>
-
  </tr>
  `;
 }
@@ -739,6 +805,264 @@ function toggleAutoUpdate(){
   );
 
  }
+
+}
+
+function addLatLonPoint(){
+
+ const lat =
+ Number(
+  document.getElementById(
+   "latInput"
+  ).value
+ );
+
+ const lon =
+ Number(
+  document.getElementById(
+   "lonInput"
+  ).value
+ );
+
+ if(
+  isNaN(lat) ||
+  isNaN(lon)
+ ){
+
+  alert(
+   "緯度経度を入力してください"
+  );
+
+  return;
+ }
+
+ map.setView(
+  [lat,lon],
+  12
+ );
+
+ const oldPoint =
+ points.find(
+  p => p.isExtraPoint
+ );
+
+ if(oldPoint){
+
+  if(oldPoint.marker){
+
+   map.removeLayer(
+    oldPoint.marker
+   );
+
+  }
+
+  const oldCell =
+   document.getElementById(
+    `rain-${oldPoint.name}`
+   );
+
+  if(oldCell){
+
+   oldCell.closest(
+    "tr"
+   ).remove();
+
+  }
+
+ }
+
+ const index =
+  points.findIndex(
+   p => p.isExtraPoint
+  );
+
+ if(index >= 0){
+
+  points.splice(
+   index,
+   1
+  );
+
+ }
+
+ const p = {
+
+  name:"追加地点",
+
+  address:`${lat}, ${lon}`,
+
+  lat:lat,
+
+  lon:lon,
+
+  isExtraPoint:true
+
+ };
+
+ points.push(p);
+
+ const zoom = 8;
+
+ const point =
+  map.project(
+   [p.lat,p.lon],
+   zoom
+  );
+
+ p.tileX =
+  Math.floor(
+   point.x / 256
+  );
+
+ p.tileY =
+  Math.floor(
+   point.y / 256
+  );
+
+ p.pixelX =
+  Math.floor(
+   point.x % 256
+  );
+
+ p.pixelY =
+  Math.floor(
+   point.y % 256
+  );
+
+ addMonitoringPoint(
+  p
+ );
+
+ testAllPoints();
+
+}
+
+function addLatLonPoint(){
+
+ const lat =
+ Number(
+  document.getElementById(
+   "latInput"
+  ).value
+ );
+
+ const lon =
+ Number(
+  document.getElementById(
+   "lonInput"
+  ).value
+ );
+
+ if(
+  isNaN(lat) ||
+  isNaN(lon)
+ ){
+
+  alert(
+   "緯度経度を入力してください"
+  );
+
+  return;
+ }
+
+ map.setView(
+  [lat,lon],
+  12
+ );
+
+ const oldPoint =
+ points.find(
+  p => p.isExtraPoint
+ );
+
+ if(oldPoint){
+
+  if(oldPoint.marker){
+
+   map.removeLayer(
+    oldPoint.marker
+   );
+
+  }
+
+  const oldCell =
+   document.getElementById(
+    `rain-${oldPoint.name}`
+   );
+
+  if(oldCell){
+
+   oldCell.closest(
+    "tr"
+   ).remove();
+
+  }
+
+ }
+
+ const index =
+  points.findIndex(
+   p => p.isExtraPoint
+  );
+
+ if(index >= 0){
+
+  points.splice(
+   index,
+   1
+  );
+
+ }
+
+ const p = {
+
+  name:"追加地点",
+
+  address:`${lat}, ${lon}`,
+
+  lat:lat,
+
+  lon:lon,
+
+  isExtraPoint:true
+
+ };
+
+ points.push(p);
+
+ const zoom = 8;
+
+ const point =
+  map.project(
+   [p.lat,p.lon],
+   zoom
+  );
+
+ p.tileX =
+  Math.floor(
+   point.x / 256
+  );
+
+ p.tileY =
+  Math.floor(
+   point.y / 256
+  );
+
+ p.pixelX =
+  Math.floor(
+   point.x % 256
+  );
+
+ p.pixelY =
+  Math.floor(
+   point.y % 256
+  );
+
+ addMonitoringPoint(
+  p
+ );
+
+ testAllPoints();
 
 }
 
