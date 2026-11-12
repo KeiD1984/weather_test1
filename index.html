@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターB
+☔ 降雨監視モニターA
 </h2>
 
 </header>
@@ -826,8 +826,33 @@ function rainText(rgb){
  const g = rgb[1];
  const b = rgb[2];
 
+ if(r===242 && g===242 && b===255){
+  return "1mm未満";
+ }
+
+ if(r===160 && g===210 && b===255){
+  return "1～5mm/h";
+ }
+
+ if(r===33 && g===140 && b===255){
+  return "5～10mm/h";
+ }
+
+ if(r===0 && g===65 && b===255){
+  return "10～20mm/h";
+ }
+
+ if(r===250 && g===245 && b===0){
+  return "20～30mm/h";
+ }
+
+ if(r===255 && g===153 && b===0){
+  return "30～50mm/h";
+ }
+
+
  console.log(
-  "RGB",
+  "未知RGB",
   r,
   g,
   b
@@ -847,6 +872,10 @@ function rainColor(rgb){
  const g = rgb[1];
  const b = rgb[2];
 
+ if(r===242 && g===242 && b===255){
+  return "#f2f2ff";
+ }
+
  if(r===160 && g===210 && b===255){
   return "#a0d2ff";
  }
@@ -855,25 +884,22 @@ function rainColor(rgb){
   return "#218cff";
  }
 
- if(r===255 && g===255 && b===0){
-  return "#ffff00";
+ if(r===0 && g===65 && b===255){
+  return "#0041ff";
+ }
+
+ if(r===250 && g===245 && b===0){
+  return "#faf500";
  }
 
  if(r===255 && g===153 && b===0){
   return "#ff9900";
  }
 
- if(r===255 && g===40 && b===0){
-  return "#ff2800";
- }
-
- if(r===180 && g===0 && b===104){
-  return "#b40068";
- }
-
  return "#cccccc";
 }
 
+ 
 function startAutoUpdate(){
 
  if(updateTimer){
