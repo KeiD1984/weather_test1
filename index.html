@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターE
+☔ 降雨監視モニターF
 </h2>
 
 </header>
@@ -746,10 +746,13 @@ const validTime =
  await getLatestTime();
 
  const url =
- `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/8/${p.tileX}/${p.tileY}.png`;
+`https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns_nd/8/${p.tileX}/${p.tileY}.png`;
 
  const res =
  await fetch(url);
+
+console.log(url);
+console.log("status",res.status);
 
  const blob =
  await res.blob();
