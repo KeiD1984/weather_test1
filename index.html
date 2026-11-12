@@ -854,6 +854,12 @@ function rainText(rgb){
   return "50～80mm/h";
  }
 
+ if(r===180 && g===0 && b===104){
+  return "80mm/h以上";
+ }
+
+
+
  console.log(
   "未知RGB",
   r,
@@ -901,6 +907,12 @@ function rainColor(rgb){
  if(r===255 && g===40 && b===0){
   return "#ff2800";
  }
+
+
+ if(r===180 && g===0 && b===104){
+  return "#B40068";
+ }
+
 
  return "#800080";
 }
