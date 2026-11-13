@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターC
+☔ 降雨監視モニターD
 </h2>
 
 </header>
@@ -990,7 +990,43 @@ function rainColor(rgb){
 
  return "#800080";
 }
- 
+
+function thunderText(rgb){
+
+ if(rgb[3]===0){
+  return "-";
+ }
+
+ const r=rgb[0];
+ const g=rgb[1];
+ const b=rgb[2];
+
+ if(r===250 && g===245 && b===0){
+  return "Lv1";
+ }
+
+ return `${r},${g},${b}`;
+}
+
+function thunderColor(rgb){
+
+ if(rgb[3]===0){
+  return "#ffffff";
+ }
+
+ const r=rgb[0];
+ const g=rgb[1];
+ const b=rgb[2];
+
+ if(r===250 && g===245 && b===0){
+  return "#faf500";
+ }
+
+ return "#cccccc";
+}
+
+
+
 function startAutoUpdate(){
 
  if(updateTimer){
@@ -1380,8 +1416,11 @@ async function testAllPoints(){
     `thunder-${p.name}`
    );
 
-  thunderCell.textContent =
-   `${thunderRgb[0]},${thunderRgb[1]},${thunderRgb[2]}`;
+thunderCell.textContent =
+ thunderText(thunderRgb);
+
+thunderCell.style.backgroundColor =
+ thunderColor(thunderRgb);
 
   p.marker.setStyle({
    fillColor: rainColor(rgb)
