@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターB
+☔ 降雨監視モニターC
 </h2>
 
 </header>
@@ -739,8 +739,10 @@ console.log(
 
 async function getPointRgb(p){
 
- const validTime =
-  await getLatestTime();
+ 
+
+const validTime = "20261113151000";
+
 
  const url =
  `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/hrpns/8/${p.tileX}/${p.tileY}.png`;
