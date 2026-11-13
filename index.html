@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターA
+☔ 降雨監視モニターB
 </h2>
 
 </header>
@@ -732,6 +732,33 @@ console.log(
  json.slice(0,10)
 );
 
+function subtractMinutes(yyyymmddhhmmss, minutes){
+
+ const d = new Date(
+  yyyymmddhhmmss.slice(0,4),
+  Number(yyyymmddhhmmss.slice(4,6))-1,
+  yyyymmddhhmmss.slice(6,8),
+  yyyymmddhhmmss.slice(8,10),
+  yyyymmddhhmmss.slice(10,12),
+  yyyymmddhhmmss.slice(12,14)
+ );
+
+ d.setMinutes(
+  d.getMinutes() - minutes
+ );
+
+ const pad = n => String(n).padStart(2,"0");
+
+ return (
+  d.getFullYear() +
+  pad(d.getMonth()+1) +
+  pad(d.getDate()) +
+  pad(d.getHours()) +
+  pad(d.getMinutes()) +
+  pad(d.getSeconds())
+ );
+}
+
 
  return json[0].basetime;
 
@@ -823,39 +850,57 @@ return rgb;
  return rgb;
 
 }
-
 async function getThunderRgb(p){
 
-const validTime =
+ const latestTime =
   await getLatestTime();
 
+ let res = null;
+
+ for(
+  let back=0;
+  back<=60;
+  back+=5
+ ){
+
+  const validTime =
+   subtractMinutes(
+    latestTime,
+    back
+   );
+
+  const url =
+   `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/thns/8/${p.tileX}/${p.tileY}.png`;
+
+  const testRes =
+   await fetch(url);
+
   console.log(
- "THUNDER TIME",
- validTime
-);
+   "THUNDER CHECK",
+   validTime,
+   testRes.status
+  );
 
- const url =
- `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/thns/8/${p.tileX}/${p.tileY}.png`;
+  if(testRes.ok){
 
- const res =
-  await fetch(url);
+   console.log(
+    "THUNDER USE",
+    validTime
+   );
 
- console.log(
-  "THUNDER URL",
-  url
- );
+   res = testRes;
 
- console.log(
-  "THUNDER status",
-  res.status
- );
+   break;
+  }
+ }
 
- if(!res.ok){
+ if(!res){
   return [0,0,0,0];
  }
 
  const blob =
   await res.blob();
+
 
  const img =
   await createImageBitmap(blob);
