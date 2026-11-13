@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターE
+☔ 降雨監視モニターF
 </h2>
 
 </header>
@@ -1016,10 +1016,7 @@ function rainColor(rgb){
  return "#800080";
 }
 
-
 function thunderText(rgb){
-
- console.log("thunderText",rgb);
 
  if(rgb[3]===0){
   return "-";
@@ -1033,8 +1030,21 @@ function thunderText(rgb){
   return "Lv1";
  }
 
+ if(r===255 && g===153 && b===0){
+  return "Lv2";
+ }
+
+ if(r===255 && g===40 && b===0){
+  return "Lv3";
+ }
+
+ if(r===180 && g===0 && b===104){
+  return "Lv4";
+ }
+
  return `${r},${g},${b}`;
 }
+
 
 function thunderColor(rgb){
 
