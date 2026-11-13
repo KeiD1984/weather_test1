@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターF
+☔ 降雨監視モニターA
 </h2>
 
 </header>
@@ -793,37 +793,23 @@ async function getPointRgb(p){
   0
  );
 
+ const rgb =
+ ctx.getImageData(
+  p.pixelX,
+  p.pixelY,
+  1,
+  1
+ ).data;
 
- for(let dx=-3; dx<=3; dx++){
- for(let dy=-3; dy<=3; dy++){
+console.log(
+ p.name,
+ rgb[0],
+ rgb[1],
+ rgb[2],
+ rgb[3]
+);
 
-  const data =
-   ctx.getImageData(
-    p.pixelX + dx,
-    p.pixelY + dy,
-    1,
-    1
-   ).data;
-
-  if(data[3] > 0){
-
-   console.log(
-    "THUNDER HIT",
-    p.name,
-    dx,
-    dy,
-    data[0],
-    data[1],
-    data[2],
-    data[3]
-   );
-
-   return data;
-  }
- }
-}
-
-return [0,0,0,0];
+return rgb;
 
  console.log(
   p.name,
@@ -883,33 +869,36 @@ async function getThunderRgb(p){
   0
  );
 
- const rgb =
-  ctx.getImageData(
-   p.pixelX,
-   p.pixelY,
-   1,
-   1
-  ).data;
+for(let dx=-3; dx<=3; dx++){
+ for(let dy=-3; dy<=3; dy++){
 
- console.log(
-  "THUNDER TILE",
-  p.name,
-  p.tileX,
-  p.tileY,
-  p.pixelX,
-  p.pixelY
- );
+  const data =
+   ctx.getImageData(
+    p.pixelX + dx,
+    p.pixelY + dy,
+    1,
+    1
+   ).data;
 
- console.log(
-  "THUNDER RGB",
-  p.name,
-  rgb[0],
-  rgb[1],
-  rgb[2],
-  rgb[3]
- );
+  if(data[3] > 0){
 
- return rgb;
+   console.log(
+    "THUNDER HIT",
+    p.name,
+    dx,
+    dy,
+    data[0],
+    data[1],
+    data[2],
+    data[3]
+   );
+
+   return data;
+  }
+ }
+}
+
+return [0,0,0,0];
 
 }
 
@@ -1455,7 +1444,7 @@ async function testAllPoints(){
    );
 
 thunderCell.textContent =
- `${thunderRgb[0]},${thunderRgb[1]},${thunderRgb[2]},${thunderRgb[3]}`;
+ thunderText(thunderRgb);
 
 thunderCell.style.backgroundColor =
  thunderColor(thunderRgb);
