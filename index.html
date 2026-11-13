@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターB
+☔ 降雨監視モニターC
 </h2>
 
 </header>
@@ -716,38 +716,44 @@ function buildPointInfo(){
 
 buildPointInfo();
 
-
 async function getLatestTime(){
 
  const url =
- "https://www.jma.go.jp/bosai/jmatile/data/nowc/targetTimes_N1.json";
+  "https://www.jma.go.jp/bosai/jmatile/data/nowc/targetTimes_N1.json";
 
  const res =
- await fetch(url);
+  await fetch(url);
 
  const json =
- await res.json();
+  await res.json();
 
-console.log(
- json.slice(0,10)
-);
+ console.log(
+  json.slice(0,10)
+ );
 
-function subtractMinutes(yyyymmddhhmmss, minutes){
+ return json[0].basetime;
+}
+
+function subtractMinutes(
+ yyyymmddhhmmss,
+ minutes
+){
 
  const d = new Date(
-  yyyymmddhhmmss.slice(0,4),
+  Number(yyyymmddhhmmss.slice(0,4)),
   Number(yyyymmddhhmmss.slice(4,6))-1,
-  yyyymmddhhmmss.slice(6,8),
-  yyyymmddhhmmss.slice(8,10),
-  yyyymmddhhmmss.slice(10,12),
-  yyyymmddhhmmss.slice(12,14)
+  Number(yyyymmddhhmmss.slice(6,8)),
+  Number(yyyymmddhhmmss.slice(8,10)),
+  Number(yyyymmddhhmmss.slice(10,12)),
+  Number(yyyymmddhhmmss.slice(12,14))
  );
 
  d.setMinutes(
   d.getMinutes() - minutes
  );
 
- const pad = n => String(n).padStart(2,"0");
+ const pad =
+  n => String(n).padStart(2,"0");
 
  return (
   d.getFullYear() +
@@ -760,14 +766,11 @@ function subtractMinutes(yyyymmddhhmmss, minutes){
 }
 
 
- return json[0].basetime;
-
-}
 
 async function getPointRgb(p){
 
-
-  const validTime = "20261113151000";
+const validTime =
+ await getLatestTime();
 
 
  const url =
