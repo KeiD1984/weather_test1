@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターA
+☔ 降雨監視モニターB
 </h2>
 
 </header>
@@ -428,10 +428,6 @@ function moveToPoint(
 
 async function moveToCurrentLocation(){
 
-
-
-
-
  navigator.geolocation.getCurrentPosition(
   
   async (pos)=>{
@@ -653,7 +649,7 @@ ${p.address || ""}
 取得中...
 </td>
 
-<td>
+<td id="thunder-${p.name}">
 -
 </td>
 
@@ -815,6 +811,50 @@ async function getPointRgb(p){
  return rgb;
 
 }
+
+async function getThunderRgb(p){
+
+ const validTime =
+  await getLatestTime();
+
+ const url =
+ `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/thns/8/${p.tileX}/${p.tileY}.png`;
+
+ console.log(url);
+
+ const res =
+  await fetch(url);
+
+ if(!res.ok){
+  return [0,0,0,0];
+ }
+
+ const blob =
+  await res.blob();
+
+ const img =
+  await createImageBitmap(blob);
+
+ const canvas =
+  document.createElement("canvas");
+
+ canvas.width = 256;
+ canvas.height = 256;
+
+ const ctx =
+  canvas.getContext("2d");
+
+ ctx.drawImage(img,0,0);
+
+ return ctx.getImageData(
+  p.pixelX,
+  p.pixelY,
+  1,
+  1
+ ).data;
+}
+
+
 
 function rainText(rgb){
 
@@ -1246,50 +1286,68 @@ testAllPoints();
 
 }
 
-
 async function testAllPoints(){
 
-document.getElementById(
- "lastUpdate"
-).textContent =
- "更新中...";
+ document.getElementById(
+  "lastUpdate"
+ ).textContent =
+  "更新中...";
 
  for(const p of points){
 
   const rgb =
-  await getPointRgb(p);
+   await getPointRgb(p);
+
+  const thunderRgb =
+   await getThunderRgb(p);
 
   console.log(
- new Date().toLocaleTimeString(),
- p.name,
- rgb[0],
- rgb[1],
- rgb[2],
- rgb[3]
-);
+   "THUNDER",
+   p.name,
+   thunderRgb[0],
+   thunderRgb[1],
+   thunderRgb[2],
+   thunderRgb[3]
+  );
 
-const currentCell =
- document.getElementById(
-  `current-${p.name}`
- );
+  console.log(
+   new Date().toLocaleTimeString(),
+   p.name,
+   rgb[0],
+   rgb[1],
+   rgb[2],
+   rgb[3]
+  );
 
- currentCell.textContent =
- rainText(rgb);
+  const currentCell =
+   document.getElementById(
+    `current-${p.name}`
+   );
 
-currentCell.style.backgroundColor =
- rainColor(rgb);
+  currentCell.textContent =
+   rainText(rgb);
 
-const futureCell =
- document.getElementById(
-  `future-${p.name}`
- );
+  currentCell.style.backgroundColor =
+   rainColor(rgb);
 
-futureCell.textContent =
- rainText(rgb);
+  const futureCell =
+   document.getElementById(
+    `future-${p.name}`
+   );
 
-futureCell.style.backgroundColor =
- rainColor(rgb);
+  futureCell.textContent =
+   rainText(rgb);
 
+  futureCell.style.backgroundColor =
+   rainColor(rgb);
+
+  const thunderCell =
+   document.getElementById(
+    `thunder-${p.name}`
+   );
+
+  thunderCell.textContent =
+   `${thunderRgb[0]},${thunderRgb[1]},${thunderRgb[2]}`;
 
   p.marker.setStyle({
    fillColor: rainColor(rgb)
@@ -1298,22 +1356,22 @@ futureCell.style.backgroundColor =
  }
 
  const updateTime =
- new Date().toLocaleTimeString(
-  "ja-JP"
- );
+  new Date().toLocaleTimeString(
+   "ja-JP"
+  );
 
-document.getElementById(
- "lastUpdate"
-).textContent =
- "更新: " +
- updateTime;
+ document.getElementById(
+  "lastUpdate"
+ ).textContent =
+  "更新: " + updateTime;
 
-document.getElementById(
- "currentTime"
-).textContent =
- updateTime;
+ document.getElementById(
+  "currentTime"
+ ).textContent =
+   updateTime;
 
 }
+
 
 points.forEach(p=>{
 
