@@ -793,13 +793,37 @@ async function getPointRgb(p){
   0
  );
 
- const rgb =
-  ctx.getImageData(
-   p.pixelX,
-   p.pixelY,
-   1,
-   1
-  ).data;
+
+ for(let dx=-3; dx<=3; dx++){
+ for(let dy=-3; dy<=3; dy++){
+
+  const data =
+   ctx.getImageData(
+    p.pixelX + dx,
+    p.pixelY + dy,
+    1,
+    1
+   ).data;
+
+  if(data[3] > 0){
+
+   console.log(
+    "THUNDER HIT",
+    p.name,
+    dx,
+    dy,
+    data[0],
+    data[1],
+    data[2],
+    data[3]
+   );
+
+   return data;
+  }
+ }
+}
+
+return [0,0,0,0];
 
  console.log(
   p.name,
@@ -1421,7 +1445,7 @@ async function testAllPoints(){
    );
 
 thunderCell.textContent =
- thunderText(thunderRgb);
+ `${thunderRgb[0]},${thunderRgb[1]},${thunderRgb[2]},${thunderRgb[3]}`;
 
 thunderCell.style.backgroundColor =
  thunderColor(thunderRgb);
