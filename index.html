@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターC
+☔ 降雨監視モニターD
 </h2>
 
 </header>
@@ -1041,7 +1041,6 @@ function thunderText(rgb){
  return `${r},${g},${b}`;
 }
 
-
 function thunderColor(rgb){
 
  if(rgb[3]===0){
@@ -1054,6 +1053,18 @@ function thunderColor(rgb){
 
  if(r===250 && g===245 && b===0){
   return "#faf500";
+ }
+
+ if(r===255 && g===153 && b===0){
+  return "#ff9900";
+ }
+
+ if(r===255 && g===40 && b===0){
+  return "#ff2800";
+ }
+
+ if(r===180 && g===0 && b===104){
+  return "#B40068";
  }
 
  return "#cccccc";
@@ -1451,7 +1462,7 @@ async function testAllPoints(){
    );
 
 thunderCell.textContent =
- `R${thunderRgb[0]} G${thunderRgb[1]} B${thunderRgb[2]} A${thunderRgb[3]}`;
+ thunderText(thunderRgb);
 
 thunderCell.style.backgroundColor =
  thunderColor(thunderRgb);
