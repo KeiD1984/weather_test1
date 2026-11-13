@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターD
+☔ 降雨監視モニターE
 </h2>
 
 </header>
@@ -653,9 +653,10 @@ ${p.address || ""}
 -
 </td>
 
-<td>
+<td id="tornado-${p.name}">
 -
 </td>
+
 
 </tr>
 
@@ -991,7 +992,10 @@ function rainColor(rgb){
  return "#800080";
 }
 
+
 function thunderText(rgb){
+
+ console.log("thunderText",rgb);
 
  if(rgb[3]===0){
   return "-";
