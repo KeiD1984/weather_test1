@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターD
+☔ 降雨監視モニターE
 </h2>
 
 </header>
@@ -739,9 +739,8 @@ console.log(
 
 async function getPointRgb(p){
 
- 
-
-const validTime = "20261113151000";
+const validTime =
+ await getLatestTime();
 
 
  const url =
