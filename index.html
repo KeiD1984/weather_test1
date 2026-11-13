@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターB
+☔ 降雨監視モニターC
 </h2>
 
 </header>
@@ -820,10 +820,18 @@ async function getThunderRgb(p){
  const url =
  `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/thns/8/${p.tileX}/${p.tileY}.png`;
 
- console.log(url);
-
  const res =
   await fetch(url);
+
+ console.log(
+  "THUNDER URL",
+  url
+ );
+
+ console.log(
+  "THUNDER status",
+  res.status
+ );
 
  if(!res.ok){
   return [0,0,0,0];
@@ -844,14 +852,40 @@ async function getThunderRgb(p){
  const ctx =
   canvas.getContext("2d");
 
- ctx.drawImage(img,0,0);
+ ctx.drawImage(
+  img,
+  0,
+  0
+ );
 
- return ctx.getImageData(
+ const rgb =
+  ctx.getImageData(
+   p.pixelX,
+   p.pixelY,
+   1,
+   1
+  ).data;
+
+ console.log(
+  "THUNDER TILE",
+  p.name,
+  p.tileX,
+  p.tileY,
   p.pixelX,
-  p.pixelY,
-  1,
-  1
- ).data;
+  p.pixelY
+ );
+
+ console.log(
+  "THUNDER RGB",
+  p.name,
+  rgb[0],
+  rgb[1],
+  rgb[2],
+  rgb[3]
+ );
+
+ return rgb;
+
 }
 
 
