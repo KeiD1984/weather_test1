@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターD
+☔ 降雨監視モニターA
 </h2>
 
 </header>
@@ -853,6 +853,7 @@ return rgb;
  return rgb;
 
 }
+
 async function getThunderRgb(p){
 
  const latestTime =
@@ -957,7 +958,106 @@ return [0,0,0,0];
 
 }
 
+async function getTornadoRgb(p){
 
+ const latestTime =
+  await getLatestTime();
+
+ let res = null;
+
+ for(
+  let back=0;
+  back<=60;
+  back+=5
+ ){
+
+  const validTime =
+   subtractMinutes(
+    latestTime,
+    back
+   );
+
+  const url =
+   `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/tornado/8/${p.tileX}/${p.tileY}.png`;
+
+  const testRes =
+   await fetch(url);
+
+  console.log(
+   "TORNADO CHECK",
+   validTime,
+   testRes.status
+  );
+
+  if(testRes.ok){
+
+   console.log(
+    "TORNADO USE",
+    validTime
+   );
+
+   res = testRes;
+
+   break;
+  }
+ }
+
+ if(!res){
+  return [0,0,0,0];
+ }
+
+ const blob =
+  await res.blob();
+
+ const img =
+  await createImageBitmap(blob);
+
+ const canvas =
+   document.createElement("canvas");
+
+ canvas.width = 256;
+ canvas.height = 256;
+
+ const ctx =
+   canvas.getContext("2d");
+
+ ctx.drawImage(
+  img,
+  0,
+  0
+ );
+
+ for(let dx=-15; dx<=15; dx++){
+  for(let dy=-15; dy<=15; dy++){
+
+   const data =
+    ctx.getImageData(
+      p.pixelX + dx,
+      p.pixelY + dy,
+      1,
+      1
+    ).data;
+
+   if(data[3] > 0){
+
+    console.log(
+     "TORNADO HIT",
+     p.name,
+     dx,
+     dy,
+     data[0],
+     data[1],
+     data[2],
+     data[3]
+    );
+
+    return data;
+   }
+  }
+ }
+
+ return [0,0,0,0];
+}
 
 function rainText(rgb){
 
@@ -1089,6 +1189,15 @@ function thunderText(rgb){
  return `${r},${g},${b}`;
 }
 
+function tornadoText(rgb){
+
+ if(rgb[3]===0){
+  return "-";
+ }
+
+ return `${rgb[0]},${rgb[1]},${rgb[2]}`;
+}
+
 function thunderColor(rgb){
 
  if(rgb[3]===0){
@@ -1118,7 +1227,14 @@ function thunderColor(rgb){
  return "#cccccc";
 }
 
+function tornadoColor(rgb){
 
+ if(rgb[3]===0){
+  return "#ffffff";
+ }
+
+ return "#ffff99";
+}
 
 function startAutoUpdate(){
 
@@ -1464,6 +1580,9 @@ async function testAllPoints(){
   const thunderRgb =
    await getThunderRgb(p);
 
+const tornadoRgb =
+ await getTornadoRgb(p);
+
   console.log(
    "THUNDER",
    p.name,
@@ -1509,11 +1628,22 @@ async function testAllPoints(){
     `thunder-${p.name}`
    );
 
+   const tornadoCell =
+ document.getElementById(
+  `tornado-${p.name}`
+ );
+
 thunderCell.textContent =
  thunderText(thunderRgb);
 
 thunderCell.style.backgroundColor =
  thunderColor(thunderRgb);
+
+ tornadoCell.textContent =
+ tornadoText(tornadoRgb);
+
+tornadoCell.style.backgroundColor =
+ tornadoColor(tornadoRgb);
 
   p.marker.setStyle({
    fillColor: rainColor(rgb)
