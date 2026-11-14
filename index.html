@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターB
+☔ 降雨監視モニターA
 </h2>
 
 </header>
@@ -433,6 +433,7 @@ function moveToPoint(
 
 }
 
+
 async function moveToCurrentLocation(){
 
  navigator.geolocation.getCurrentPosition(
@@ -453,6 +454,8 @@ const reverseRes =
 
 const reverseData =
  await reverseRes.json();
+
+const addr = reverseData.address || {};
 
  const currentAddress =
  [
