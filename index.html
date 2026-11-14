@@ -280,18 +280,21 @@ th,td{
 <br>
 
 <select id="forecastMinutes">
-
+<option value="5">5分後</option>
 <option value="10">10分後</option>
+<option value="15">15分後</option>
 <option value="20">20分後</option>
+<option value="25">25分後</option>
 <option value="30">30分後</option>
+<option value="35">35分後</option>
 <option value="40">40分後</option>
+<option value="45">45分後</option>
 <option value="50">50分後</option>
+<option value="55">55分後</option>
 <option value="60">60分後</option>
-
 </select>
 
 </th>
-
 
 <th>雷</th>
 <th>竜巻</th>
@@ -853,6 +856,70 @@ return rgb;
  return rgb;
 
 }
+
+async function getForecastRgb(
+ p,
+ minutes
+){
+
+ const latestTime =
+  await getLatestTime();
+
+ const targetTime =
+  subtractMinutes(
+   latestTime,
+   -minutes
+  );
+
+ const url =
+ `https://www.jma.go.jp/bosai/jmatile/data/nowc/${targetTime}/none/${targetTime}/surf/hrpns/8/${p.tileX}/${p.tileY}.png`;
+
+ console.log(
+  "FORECAST URL",
+  url
+ );
+
+ const res =
+  await fetch(url);
+
+ console.log(
+  "FORECAST STATUS",
+  res.status
+ );
+
+ if(!res.ok){
+  return [0,0,0,0];
+ }
+
+ const blob =
+  await res.blob();
+
+ const img =
+  await createImageBitmap(blob);
+
+ const canvas =
+  document.createElement("canvas");
+
+ canvas.width = 256;
+ canvas.height = 256;
+
+ const ctx =
+  canvas.getContext("2d");
+
+ ctx.drawImage(
+  img,
+  0,
+  0
+ );
+
+ return ctx.getImageData(
+  p.pixelX,
+  p.pixelY,
+  1,
+  1
+ ).data;
+}
+
 
 async function getThunderRgb(p){
 
@@ -1647,6 +1714,19 @@ async function testAllPoints(){
 const tornadoRgb =
  await getTornadoRgb(p);
 
+  const forecastMinutes =
+  Number(
+   document.getElementById(
+    "forecastMinutes"
+   ).value
+  );
+
+ const futureRgb =
+  await getForecastRgb(
+   p,
+   forecastMinutes
+  );
+
   console.log(
    "THUNDER",
    p.name,
@@ -1681,11 +1761,11 @@ const tornadoRgb =
     `future-${p.name}`
    );
 
-  futureCell.textContent =
-   rainText(rgb);
+futureCell.textContent =
+ rainText(futureRgb);
 
-  futureCell.style.backgroundColor =
-   rainColor(rgb);
+futureCell.style.backgroundColor =
+ rainColor(futureRgb);
 
   const thunderCell =
    document.getElementById(
