@@ -1581,10 +1581,13 @@ const shortAddress =
 
  }
 
-
 const p = {
 
- name:"指定地点",
+ name:
+  addr.city ||
+  addr.town ||
+  addr.village ||
+  "指定地点",
 
  address:shortAddress,
 
@@ -1733,9 +1736,13 @@ const placeName =
   12
  );
 
-const p = {
+ const p = {
 
- name:"指定地点",
+ name:
+  addr.city ||
+  addr.town ||
+  addr.village ||
+  "指定地点",
 
  address:shortAddress,
 
