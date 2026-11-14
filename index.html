@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターA
+☔ 降雨監視モニターB
 </h2>
 
 </header>
@@ -952,12 +952,25 @@ const res =
   0
  );
 
- return ctx.getImageData(
+const rgb =
+ ctx.getImageData(
   p.pixelX,
   p.pixelY,
   1,
   1
  ).data;
+
+console.log(
+ "FORECAST RGB",
+ p.name,
+ rgb[0],
+ rgb[1],
+ rgb[2],
+ rgb[3]
+);
+
+return rgb;
+
 }
 
 
