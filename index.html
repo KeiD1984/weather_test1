@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターA
+☔ 降雨監視モニターB
 </h2>
 
 </header>
@@ -286,6 +286,12 @@ th,td{
 <option value="20">20分後</option>
 <option value="25">25分後</option>
 <option value="30">30分後</option>
+<option value="35">35分後</option>
+<option value="40">40分後</option>
+<option value="45">45分後</option>
+<option value="50">50分後</option>
+<option value="55">55分後</option>
+<option value="60">60分後</option>
 </select>
 
 </th>
@@ -913,9 +919,8 @@ const res =
 
 if(!res.ok){
 
- return await getPointRgb(
-  p
- );
+ return await getPointRgb(p);
+
 }
 
  const blob =
