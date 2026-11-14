@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターC
+☔ 降雨監視モニターD
 </h2>
 
 </header>
@@ -246,7 +246,7 @@ th,td{
 <button
  onclick="moveToCurrentLocation()">
 
-📍現在地
+📍現在地追加
 
 </button>
 
@@ -865,14 +865,32 @@ async function getForecastRgb(
  const latestTime =
   await getLatestTime();
 
- const targetTime =
-  subtractMinutes(
-   latestTime,
-   -minutes
-  );
+  const baseTime =
+ await getLatestTime();
 
-  const url =
- `https://www.jma.go.jp/bosai/jmatile/data/nowc/${targetTime}/none/${targetTime}/surf/hrpns/8/${p.tileX}/${p.tileY}.png`;
+ const forecastTime =
+ addMinutes(
+  baseTime,
+  minutes
+ );
+
+const url =
+ `https://www.jma.go.jp/bosai/jmatile/data/nowc/${baseTime}/none/${forecastTime}/surf/hrpns/8/${p.tileX}/${p.tileY}.png`;
+
+console.log(
+ "BASE TIME",
+ baseTime
+);
+
+console.log(
+ "FORECAST TIME",
+ forecastTime
+);
+
+console.log(
+ "FORECAST URL",
+ url
+);
 
 console.log(
  "FORECAST URL",
@@ -881,6 +899,11 @@ console.log(
 
 const res =
  await fetch(url);
+
+ console.log(
+ "FORECAST STATUS",
+ res.status
+);
 
 console.log(
  "FORECAST STATUS",
@@ -939,6 +962,37 @@ async function getThunderRgb(p){
     latestTime,
     back
    );
+
+   function addMinutes(
+ yyyymmddhhmmss,
+ minutes
+){
+
+ const d = new Date(
+  Number(yyyymmddhhmmss.slice(0,4)),
+  Number(yyyymmddhhmmss.slice(4,6))-1,
+  Number(yyyymmddhhmmss.slice(6,8)),
+  Number(yyyymmddhhmmss.slice(8,10)),
+  Number(yyyymmddhhmmss.slice(10,12)),
+  Number(yyyymmddhhmmss.slice(12,14))
+ );
+
+ d.setMinutes(
+  d.getMinutes() + minutes
+ );
+
+ const pad =
+  n => String(n).padStart(2,"0");
+
+ return (
+  d.getFullYear() +
+  pad(d.getMonth()+1) +
+  pad(d.getDate()) +
+  pad(d.getHours()) +
+  pad(d.getMinutes()) +
+  pad(d.getSeconds())
+ );
+}
 
   const url =
    `https://www.jma.go.jp/bosai/jmatile/data/nowc/${validTime}/none/${validTime}/surf/thns/8/${p.tileX}/${p.tileY}.png`;
