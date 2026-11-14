@@ -457,14 +457,12 @@ const reverseData =
 
 const addr = reverseData.address || {};
 
- const currentAddress =
+const currentAddress =
  [
-  addr.suburb || "",
-  addr.neighbourhood || "",
-  addr.road || ""
- ]
- .filter(v => v)
- .join(" ");
+  addr.state || "",
+  addr.city || "",
+  addr.city_district || ""
+ ].join("");
  
 
 map.setView(
@@ -1507,6 +1505,21 @@ async function addLatLonPoint(){
  const address =
   reverseData.display_name;
 
+  const addr =
+ reverseData.address || {};
+
+const shortAddress =
+ [
+  addr.state || "",
+  addr.city ||
+  addr.town ||
+  addr.village ||
+  addr.municipality ||
+  ""
+ ]
+ .join("");
+
+
  const placeName =
 
   reverseData.name ||
@@ -1567,18 +1580,18 @@ async function addLatLonPoint(){
 
  }
 
- const p = {
 
- name:placeName,
+const p = {
 
- address:address,
+ name:"指定地点",
+
+ address:shortAddress,
 
  lat:lat,
 
  lon:lon,
 
  isExtraPoint:true
-
 };
 
  points.push(p);
@@ -1674,20 +1687,35 @@ if(index >= 0){
 
  if(!address)return;
 
- const url =
- `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+const url =
+ `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&q=${encodeURIComponent(address)}`;
 
- const res =
+const res =
  await fetch(url);
 
- const data =
+const data =
  await res.json();
 
- const placeName =
+const addr =
+ data[0].address || {};
+
+const shortAddress =
+ [
+  addr.state || "",
+  addr.city ||
+  addr.town ||
+  addr.village ||
+  addr.municipality ||
+  ""
+ ]
+ .join("");
+
+const placeName =
 
  data[0].name ||
 
  address;
+
 
  if(data.length===0){
 
@@ -1706,16 +1734,15 @@ if(index >= 0){
 
 const p = {
 
- name:placeName,
+ name:"指定地点",
 
- address:address,
+ address:shortAddress,
 
  lat:Number(data[0].lat),
 
  lon:Number(data[0].lon),
 
  isExtraPoint:true
-
 };
 
 points.push(p);
