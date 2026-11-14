@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターA
+☔ 降雨監視モニターB
 </h2>
 
 </header>
@@ -1229,8 +1229,23 @@ function tornadoText(rgb){
   return "-";
  }
 
- return "検知";
+ const r = rgb[0];
+ const g = rgb[1];
+ const b = rgb[2];
+
+ // 発生確度1
+ if(r===250 && g===245 && b===0){
+  return "Lv1";
+ }
+
+ // 発生確度2
+ if(r===255 && g===40 && b===0){
+  return "Lv2";
+ }
+
+ return `${r},${g},${b}`;
 }
+
 
 function thunderColor(rgb){
 
@@ -1267,8 +1282,23 @@ function tornadoColor(rgb){
   return "#ffffff";
  }
 
- return "#ff66ff";
+ const r = rgb[0];
+ const g = rgb[1];
+ const b = rgb[2];
+
+ // 発生確度1
+ if(r===250 && g===245 && b===0){
+  return "#faf500";
+ }
+
+ // 発生確度2
+ if(r===255 && g===40 && b===0){
+  return "#ff2800";
+ }
+
+ return "#cccccc";
 }
+
 
 function startAutoUpdate(){
 
