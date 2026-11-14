@@ -123,7 +123,7 @@ th,td{
 <header>
 
 <h2>
-☔ 降雨監視モニターB
+☔ 降雨監視モニターC
 </h2>
 
 </header>
@@ -871,21 +871,21 @@ async function getForecastRgb(
    -minutes
   );
 
- const url =
+  const url =
  `https://www.jma.go.jp/bosai/jmatile/data/nowc/${targetTime}/none/${targetTime}/surf/hrpns/8/${p.tileX}/${p.tileY}.png`;
 
- console.log(
-  "FORECAST URL",
-  url
- );
+console.log(
+ "FORECAST URL",
+ url
+);
 
- const res =
-  await fetch(url);
+const res =
+ await fetch(url);
 
- console.log(
-  "FORECAST STATUS",
-  res.status
- );
+console.log(
+ "FORECAST STATUS",
+ res.status
+);
 
  if(!res.ok){
   return [0,0,0,0];
