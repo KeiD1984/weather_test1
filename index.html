@@ -461,9 +461,12 @@ const currentAddress =
  [
   addr.state || "",
   addr.city || "",
-  addr.city_district || ""
- ].join("");
- 
+  addr.city_district || "",
+  addr.suburb || ""
+ ]
+ .filter(v => v)
+ .join("");
+
 
 map.setView(
  [lat,lon],
@@ -1511,14 +1514,12 @@ async function addLatLonPoint(){
 const shortAddress =
  [
   addr.state || "",
-  addr.city ||
-  addr.town ||
-  addr.village ||
-  addr.municipality ||
-  ""
+  addr.city || "",
+  addr.city_district || "",
+  addr.suburb || ""
  ]
+ .filter(v => v)
  .join("");
-
 
  const placeName =
 
