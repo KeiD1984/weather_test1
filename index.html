@@ -131,6 +131,92 @@ th,td{
 <div id="map"></div>
 
 
+<div id="lastUpdate">
+
+更新：
+----
+
+</div>
+
+
+</div>
+
+
+<div class="card">
+
+<h3>
+
+監視地点
+
+<button
+ onclick="moveToCurrentLocation()">
+
+📍現在地追加
+
+</button>
+
+</h3>
+
+
+<table>
+
+<tr>
+
+<th>地点</th>
+
+<th>
+
+現在
+
+<br>
+
+<span id="currentTime">
+
+--
+
+</span>
+
+</th>
+
+<th>
+
+予報
+
+<br>
+
+<select
+ id="forecastMinutes"
+ onchange="testAllPoints()">
+
+<option value="5">5分後</option>
+<option value="10">10分後</option>
+<option value="15">15分後</option>
+<option value="20">20分後</option>
+<option value="25">25分後</option>
+<option value="30">30分後</option>
+<option value="35">35分後</option>
+<option value="40">40分後</option>
+<option value="45">45分後</option>
+<option value="50">50分後</option>
+<option value="55">55分後</option>
+<option value="60">60分後</option>
+
+</select>
+
+</th>
+
+<th>雷</th>
+<th>竜巻</th>
+  
+</tr>
+
+<tbody id="siteTable">
+</tbody>
+
+</table>
+
+</div>
+
 <table>
 
 <tr>
@@ -227,90 +313,6 @@ th,td{
 </table>
 
 
-<div id="lastUpdate">
-
-更新：
-----
-
-</div>
-
-
-</div>
-
-<div class="card">
-
-<h3>
-
-監視地点
-
-<button
- onclick="moveToCurrentLocation()">
-
-📍現在地追加
-
-</button>
-
-</h3>
-
-
-<table>
-
-<tr>
-
-<th>地点</th>
-
-<th>
-
-現在
-
-<br>
-
-<span id="currentTime">
-
---
-
-</span>
-
-</th>
-
-<th>
-
-予報
-
-<br>
-
-<select
- id="forecastMinutes"
- onchange="testAllPoints()">
-
-<option value="5">5分後</option>
-<option value="10">10分後</option>
-<option value="15">15分後</option>
-<option value="20">20分後</option>
-<option value="25">25分後</option>
-<option value="30">30分後</option>
-<option value="35">35分後</option>
-<option value="40">40分後</option>
-<option value="45">45分後</option>
-<option value="50">50分後</option>
-<option value="55">55分後</option>
-<option value="60">60分後</option>
-
-</select>
-
-</th>
-
-<th>雷</th>
-<th>竜巻</th>
-  
-</tr>
-
-<tbody id="siteTable">
-</tbody>
-
-</table>
-
-</div>
 
 <div class="card">
 
@@ -318,39 +320,19 @@ th,td{
 気象庁ナウキャスト
 </h3>
 
-<div class="linkButtons">
-
 <button
  onclick="window.open(
   'https://www.jma.go.jp/bosai/nowc/',
   '_blank'
  )">
 
-☔ 雨雲の動き
-
-</button>
-
-<button
- onclick="window.open(
-  'https://www.jma.go.jp/bosai/map.html#contents=thns',
-  '_blank'
- )">
-
-⚡ 雷ナウキャスト
-
-</button>
-
-<button
- onclick="window.open(
-  'https://www.jma.go.jp/bosai/map.html#contents=tornado',
-  '_blank'
- )">
-
-🌪 竜巻発生確度
+☔ 気象庁ナウキャスト
 
 </button>
 
 </div>
+
+
 
 </div>
 
