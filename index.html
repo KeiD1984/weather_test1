@@ -1476,6 +1476,12 @@ async function addLatLonPoint(){
  const reverseData =
   await reverseRes.json();
 
+
+  console.log(
+ "REVERSE ADDRESS",
+ reverseData.address
+);
+
  const address =
   reverseData.display_name;
 
