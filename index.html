@@ -1696,10 +1696,13 @@ const reverseUrl =
 const reverseRes =
  await fetch(reverseUrl);
 
- const reverseData =
+const reverseData =
  await reverseRes.json();
 
-console.log(reverseData.address);
+console.log(
+ "REVERSE ADDRESS",
+ reverseData.address
+);
 
 const addr =
  reverseData.address || {};
@@ -1747,7 +1750,7 @@ const placeName =
   12
  );
 
- const p = {
+const p = {
 
  name:"指定地点",
 
@@ -1759,6 +1762,7 @@ const placeName =
 
  isExtraPoint:true
 };
+
 
 points.push(p);
 
