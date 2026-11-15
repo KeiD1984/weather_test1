@@ -1684,8 +1684,10 @@ const reverseUrl =
 const reverseRes =
  await fetch(reverseUrl);
 
-const reverseData =
+ const reverseData =
  await reverseRes.json();
+
+console.log(reverseData.address);
 
 const addr =
  reverseData.address || {};
