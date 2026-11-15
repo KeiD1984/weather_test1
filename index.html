@@ -1479,7 +1479,7 @@ async function addLatLonPoint(){
  const address =
   reverseData.display_name;
 
-  const addr =
+const addr =
  reverseData.address || {};
 
 const shortAddress =
@@ -1491,8 +1491,7 @@ const shortAddress =
   addr.town || "",
   addr.village || "",
   addr.suburb || "",
-  addr.neighbourhood || "",
-  addr.road || ""
+  addr.neighbourhood || ""
  ]
  .filter(v => v)
  .join("");
@@ -1673,8 +1672,23 @@ const res =
 const data =
  await res.json();
 
+const lat =
+ Number(data[0].lat);
+
+const lon =
+ Number(data[0].lon);
+
+const reverseUrl =
+ `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+
+const reverseRes =
+ await fetch(reverseUrl);
+
+const reverseData =
+ await reverseRes.json();
+
 const addr =
- data[0].address || {};
+ reverseData.address || {};
 
 const shortAddress =
  [
@@ -1685,12 +1699,10 @@ const shortAddress =
   addr.town || "",
   addr.village || "",
   addr.suburb || "",
-  addr.neighbourhood || "",
-  addr.road || ""
+  addr.neighbourhood || ""
  ]
  .filter(v => v)
  .join("");
- 
 
 const placeName =
 
@@ -1714,15 +1726,15 @@ const placeName =
   12
  );
 
-const p = {
+ const p = {
 
  name:"指定地点",
 
  address:shortAddress,
 
- lat:Number(data[0].lat),
+ lat:lat,
 
- lon:Number(data[0].lon),
+ lon:lon,
 
  isExtraPoint:true
 };
