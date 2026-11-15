@@ -1490,14 +1490,20 @@ const addr =
 
 const shortAddress =
  [
-  addr.state || "",
+  addr.state ||
+  addr.province ||
+  "",
+
   addr.county || "",
-  addr.city || "",
+
+  addr.city ||
+  addr.town ||
+  addr.village ||
+  "",
+
   addr.city_district || "",
-  addr.town || "",
-  addr.village || "",
-  addr.suburb || "",
-  addr.neighbourhood || ""
+  addr.quarter || "",
+  addr.suburb || ""
  ]
  .filter(v => v)
  .join("");
@@ -1700,17 +1706,24 @@ const addr =
 
 const shortAddress =
  [
-  addr.state || "",
+  addr.state ||
+  addr.province ||
+  "",
+
   addr.county || "",
-  addr.city || "",
+
+  addr.city ||
+  addr.town ||
+  addr.village ||
+  "",
+
   addr.city_district || "",
-  addr.town || "",
-  addr.village || "",
-  addr.suburb || "",
-  addr.neighbourhood || ""
+  addr.quarter || "",
+  addr.suburb || ""
  ]
  .filter(v => v)
  .join("");
+
 
 const placeName =
 
