@@ -1488,13 +1488,15 @@ async function addLatLonPoint(){
 const addr =
  reverseData.address || {};
 
-const shortAddress =
+ const shortAddress =
  [
   addr.state ||
   addr.province ||
   "",
 
-  addr.county || "",
+  addr.county ||
+  addr.administrative ||
+  "",
 
   addr.city ||
   addr.town ||
@@ -1503,7 +1505,8 @@ const shortAddress =
 
   addr.city_district || "",
   addr.quarter || "",
-  addr.suburb || ""
+  addr.suburb || "",
+  addr.neighbourhood || ""
  ]
  .filter(v => v)
  .join("");
@@ -1707,13 +1710,15 @@ console.log(
 const addr =
  reverseData.address || {};
 
-const shortAddress =
+ const shortAddress =
  [
   addr.state ||
   addr.province ||
   "",
 
-  addr.county || "",
+  addr.county ||
+  addr.administrative ||
+  "",
 
   addr.city ||
   addr.town ||
@@ -1722,11 +1727,11 @@ const shortAddress =
 
   addr.city_district || "",
   addr.quarter || "",
-  addr.suburb || ""
+  addr.suburb || "",
+  addr.neighbourhood || ""
  ]
  .filter(v => v)
  .join("");
-
 
 const placeName =
 
